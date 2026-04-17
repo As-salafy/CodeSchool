@@ -1,0 +1,3328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/">
+<title>CodeLearn Pro+</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+html,body{height:100%}
+body{background:#0f172a;color:white;transition:.3s;overflow-x:hidden;position:relative}
+body.light{background:#f1f5f9;color:#0f172a}
+
+/* Animated Coding Background */
+.coding-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
+.coding-bg::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(45deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);opacity:0.8}
+
+.code-particle{position:absolute;font-family:monospace;font-size:14px;color:#60a5fa;opacity:0.1;animation:codeFloat 20s linear infinite}
+.code-particle:nth-child(2n){color:#22c55e;animation-duration:25s;animation-delay:-5s}
+.code-particle:nth-child(3n){color:#f97316;animation-duration:30s;animation-delay:-10s}
+.code-particle:nth-child(4n){color:#eab308;animation-duration:35s;animation-delay:-15s}
+.code-particle:nth-child(5n){color:#ec4899;animation-duration:40s;animation-delay:-20s}
+
+@keyframes codeFloat{
+	0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+	10%{opacity:0.1}
+	90%{opacity:0.1}
+	100%{transform:translateY(-100px) rotate(360deg);opacity:0}
+}
+
+body.light .coding-bg::before{background:linear-gradient(45deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%)}
+body.light .code-particle{color:#3b82f6;opacity:0.08}
+body.light .code-particle:nth-child(2n){color:#16a34a}
+body.light .code-particle:nth-child(3n){color:#ea580c}
+body.light .code-particle:nth-child(4n){color:#ca8a04}
+body.light .code-particle:nth-child(5n){color:#db2777}
+
+/* Sidebar uses transform for smooth GPU animation */
+.sidebar{width:260px;height:100vh;background:#020617;position:fixed;left:0;top:0;padding:20px;z-index:40;transform:translateX(-100%);transition:transform .32s cubic-bezier(.2,.9,.3,1);pointer-events:none}
+.sidebar.active{transform:translateX(0);pointer-events:auto}
+.sidebar h2{margin-bottom:20px}
+.sidebar a{display:block;margin:12px 0;cursor:pointer;color:inherit;text-decoration:none}
+.sidebar a:focus{outline:2px solid #60a5fa;outline-offset:2px}
+
+.main{position:relative;width:100%;padding:20px;transition:.32s;z-index:1;overflow:hidden;min-height:100vh}
+.main.shift{margin-left:260px}
+
+/* Header and Navigation */
+header{position:fixed;top:0;left:0;right:0;background:#0f172a;z-index:50;padding:10px 20px;box-shadow:0 2px 4px rgba(0,0,0,0.1);transition:.3s;display:none}
+header.visible{display:flex}
+body.light header{background:#f1f5f9}
+.main{padding-top:0}
+.main.show-header{padding-top:80px}
+
+/* Brand Title Styling */
+.brand-title{
+	background: linear-gradient(45deg, #60a5fa, #22c55e, #f97316, #eab308, #ec4899);
+	background-size: 400% 400%;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin: 0;
+	text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+	animation: gradientShift 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+	letter-spacing: 0.5px;
+	font-family: 'Unbounded', 'Poppins', sans-serif;
+}
+
+@keyframes gradientShift {
+	0%, 100% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+}
+
+@keyframes glow {
+	0% { text-shadow: 0 0 20px rgba(96, 165, 250, 0.3); }
+	100% { text-shadow: 0 0 30px rgba(96, 165, 250, 0.6), 0 0 40px rgba(34, 197, 94, 0.3); }
+}
+
+.brand-title:hover {
+	animation: gradientShift 1.5s ease-in-out infinite, glow 1s ease-in-out infinite alternate, bounce 0.6s ease-in-out;
+	transform: scale(1.02);
+}
+
+@keyframes bounce {
+	0%, 20%, 50%, 80%, 100% { transform: scale(1); }
+	40% { transform: scale(1.05); }
+	60% { transform: scale(1.03); }
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+	display: none;
+	flex: 1;
+	justify-content: center;
+	gap: 15px;
+	align-items: center;
+}
+
+.desktop-nav a {
+	color: white;
+	text-decoration: none;
+	padding: 8px 12px;
+	border-radius: 5px;
+	transition: background 0.3s;
+	font-weight: 500;
+}
+
+.desktop-nav a:hover {
+	background: rgba(255,255,255,0.1);
+}
+
+body.light .desktop-nav a {
+	color: #0f172a;
+}
+
+body.light .desktop-nav a:hover {
+	background: rgba(0,0,0,0.1);
+}
+
+/* menu chevron + layout */
+.menu-btn{display:inline-flex;align-items:center;gap:8px}
+.menu-icon{font-size:20px;line-height:1}
+.menu-chevron{display:inline-block;transform:rotate(0deg);transition:transform .28s cubic-bezier(.2,.9,.3,1);font-size:14px;opacity:.95}
+.menu-btn.open .menu-chevron{transform:rotate(90deg)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card{background:rgba(30,41,59,0.35);padding:24px;border-radius:14px;transition:transform .25s;min-height:240px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(148,163,184,0.3);backdrop-filter:blur(10px);box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+body.light .card{background:rgba(255,255,255,0.35);border:1px solid rgba(148,163,184,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.card .card-intro{margin:8px 0 14px;color:#cbd5e1;font-size:0.95rem;line-height:1.4}
+.card:hover{transform:translateY(-6px)}
+
+input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none}
+button{padding:10px;border:none;border-radius:8px;background:#2563eb;color:white;cursor:pointer;margin-top:6px}
+
+.editor{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+textarea{height:200px;background:black;color:#00ff88;font-family:monospace}
+iframe{width:100%;height:200px;background:white;border-radius:8px;border:none}
+
+.progress{height:8px;background:#334155;border-radius:10px;margin-top:10px}
+.progress div{height:100%;background:#22c55e;border-radius:10px}
+
+.hidden{display:none !important;}
+
+/* Auth form sections */
+.auth-login{display:block}
+.auth-signup{display:block}
+.toggle-form{color:#60a5fa;cursor:pointer;text-decoration:underline;margin-top:15px;font-size:0.9rem}
+
+/* Enhanced signup form styles */
+.auth-container{max-width:420px;margin:40px auto;padding:30px;background:rgba(30,41,59,0.4);border-radius:16px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+body.light .auth-container{background:rgba(226,232,240,0.4);border:1px solid rgba(0,0,0,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+
+.form-group{margin-bottom:18px}
+.form-label{display:block;margin-bottom:6px;font-weight:500;font-size:0.95rem}
+.form-input{width:100%;padding:12px 14px;border:1.5px solid #334155;border-radius:8px;background:#0f172a;color:white;font-size:1rem;transition:.2s}
+body.light .form-input{background:#f1f5f9;color:#0f172a;border-color:#cbd5e1}
+.form-input:focus{outline:none;border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,0.1)}
+.form-input::placeholder{color:#94a3b8}
+
+.password-container{position:relative}
+.password-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;padding:4px;font-size:1.2rem;transition:.2s}
+.password-toggle:hover{color:#60a5fa}
+
+.strength-meter{height:6px;background:#334155;border-radius:3px;margin-top:8px;overflow:hidden}
+.strength-bar{height:100%;width:0%;background:#ef4444;transition:.3s}
+.strength-bar.weak{width:33%;background:#ef4444}
+.strength-bar.fair{width:66%;background:#f97316}
+.strength-bar.good{width:100%;background:#eab308}
+.strength-bar.strong{width:100%;background:#22c55e}
+.strength-text{font-size:0.8rem;margin-top:4px;color:#94a3b8}
+
+.form-btn{width:100%;padding:12px;border:none;border-radius:8px;background:#2563eb;color:white;font-weight:600;font-size:1rem;cursor:pointer;transition:.2s;margin-top:12px}
+.form-btn:hover{background:#1d4ed8}
+.form-btn:active{transform:scale(0.98)}
+
+.form-divider{text-align:center;margin:20px 0;color:#64748b;font-size:0.9rem}
+.form-divider::before{content:'';display:block;height:1px;background:#334155;margin-bottom:10px}
+body.light .form-divider::before{background:#cbd5e1}
+
+.auth-switch{text-align:center;margin-top:20px;font-size:0.95rem;color:#94a3b8}
+.auth-switch a{color:#60a5fa;text-decoration:none;cursor:pointer;font-weight:500}
+.auth-switch a:hover{text-decoration:underline}
+
+/* Course Resources Styles */
+.course-resources{max-width:800px;margin:0 auto}
+.resource-section{margin-bottom:30px;padding:20px;background:rgba(30,41,59,0.4);border-radius:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px)}
+body.light .resource-section{background:rgba(226,232,240,0.4);border:1px solid rgba(0,0,0,0.1)}
+.resource-section h3{margin-bottom:15px;color:#60a5fa;font-size:1.2rem}
+.resource-section p{margin-bottom:15px;line-height:1.6}
+.resource-section ul{list-style:none;padding:0}
+.resource-section li{margin:8px 0;padding-left:20px;position:relative}
+.resource-section li:before{content:'✓';position:absolute;left:0;color:#22c55e;font-weight:bold}
+
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
+.resource-card{background:#1e293b;padding:24px 24px 28px;border-radius:10px;border:1px solid #334155;min-height:260px;display:flex;flex-direction:column;justify-content:space-between}
+body.light .resource-card{background:#e2e8f0;border-color:#cbd5e1}
+.resource-card h4{margin-bottom:15px;color:#60a5fa;font-size:1.1rem}
+.resource-card .card-intro{margin-bottom:12px;color:#cbd5e1;font-size:0.95rem;line-height:1.45}
+body.light .resource-card .card-intro{color:#475569}
+.resource-card ul{margin:0}
+.resource-card li:before{color:#60a5fa}
+
+.resource-card a{color:#94a3b8;text-decoration:none;padding:5px 0;display:block;border-radius:4px;transition:.2s}
+.resource-card a:hover{background:#334155;color:#60a5fa;text-decoration:none}
+body.light .resource-card a:hover{background:#cbd5e1}
+
+.exercise-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-top:15px}
+.exercise-btn{background:#2563eb;color:white;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+.exercise-btn:hover{background:#1d4ed8;transform:translateY(-2px)}
+.exercise-btn:active{transform:translateY(0)}
+.interactive-lesson-panel{background:rgba(30,41,59,0.55);border:1px solid rgba(96,165,250,0.6);padding:20px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,0.35);margin-top:20px;}
+.interactive-lesson-panel h3{color:#60a5fa;margin-bottom:12px;}
+.interactive-lesson-panel p{color:#cbd5e1;margin-bottom:12px;}
+.interactive-lesson-panel ol{color:#cbd5e1;margin-left:18px;margin-bottom:12px;}
+
+/* Payment Modal Styles */
+.payment-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;justify-content:center;align-items:center}
+.payment-modal.show{display:flex}
+.payment-modal-container{background:#1e293b;border-radius:12px;padding:30px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+body.light .payment-modal-container{background:#f1f5f9}
+.payment-modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.payment-modal-title{font-size:1.3rem;font-weight:600}
+.payment-modal-close{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.5rem}
+.payment-file-label{display:block;padding:15px;background:#0f172a;border:2px dashed #334155;border-radius:8px;cursor:pointer;text-align:center;transition:.2s}
+body.light .payment-file-label{background:#f1f5f9;border-color:#cbd5e1}
+.payment-file-label:hover{border-color:#60a5fa;background:rgba(96,165,250,0.1)}
+
+/* Progress Dashboard Styles */
+.progress-card{background:rgba(30,41,59,0.35);padding:20px;border-radius:10px;border:1px solid rgba(148,163,184,0.3);backdrop-filter:blur(10px);margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+body.light .progress-card{background:rgba(255,255,255,0.35);border:1px solid rgba(148,163,184,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.progress-card h3{color:#60a5fa;margin-bottom:12px;font-size:1.1rem}
+.progress-bar-container{background:rgba(0,0,0,0.3);border-radius:8px;height:20px;overflow:hidden;margin:10px 0}
+body.light .progress-bar-container{background:rgba(0,0,0,0.1)}
+.progress-bar{background:linear-gradient(90deg, #60a5fa, #22c55e);height:100%;transition:width .5s ease;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:bold}
+.stat-box{display:inline-block;background:rgba(37,99,235,0.2);padding:15px 20px;border-radius:8px;margin:5px 10px 5px 0;color:#60a5fa;border:1px solid rgba(96,165,250,0.3)}
+body.light .stat-box{background:rgba(37,99,235,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)}
+
+/* Settings Styles */
+.settings-group{background:rgba(30,41,59,0.35);padding:20px;border-radius:10px;border:1px solid rgba(148,163,184,0.3);backdrop-filter:blur(10px);margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+body.light .settings-group{background:rgba(255,255,255,0.35);border:1px solid rgba(148,163,184,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.settings-group h3{color:#60a5fa;margin-bottom:15px;font-size:1.1rem}
+.settings-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(148,163,184,0.1)}
+.settings-item:last-child{border-bottom:none}
+.settings-item label{flex:1;color:#94a3b8;cursor:pointer}
+body.light .settings-item label{color:#64748b}
+.toggle-switch{width:50px;height:28px;background:#334155;border-radius:14px;position:relative;cursor:pointer;transition:.3s}
+body.light .toggle-switch{background:#cbd5e1}
+.toggle-switch.active{background:#22c55e}
+.toggle-switch::after{content:'';position:absolute;width:24px;height:24px;background:white;border-radius:50%;top:2px;left:2px;transition:.3s}
+.toggle-switch.active::after{left:24px}
+.settings-input{background:rgba(0,0,0,0.3);padding:10px;border-radius:6px;border:1px solid rgba(148,163,184,0.3);color:white;margin:5px 0}
+body.light .settings-input{background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.1);color:#0f172a}
+
+/* Achievements Styles */
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;margin-bottom:30px}
+.badge{background:rgba(30,41,59,0.35);padding:20px;border-radius:12px;border:2px solid rgba(148,163,184,0.3);backdrop-filter:blur(10px);text-align:center;cursor:pointer;transition:all .3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+body.light .badge{background:rgba(255,255,255,0.35);border:2px solid rgba(148,163,184,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.badge:hover{transform:translateY(-8px);border-color:#60a5fa}
+.badge.locked{opacity:0.5;border-color:rgba(148,163,184,0.1)}
+.badge-icon{font-size:40px;margin-bottom:10px}
+.badge-title{color:#60a5fa;font-weight:600;font-size:0.95rem;margin-bottom:5px}
+.badge-desc{color:#94a3b8;font-size:0.8rem}
+body.light .badge-desc{color:#64748b}
+.badge-criteria{font-size:0.75rem;color:#64748b;margin-top:8px;padding-top:8px;border-top:1px solid rgba(148,163,184,0.2)}
+body.light .badge-criteria{color:#94a3b8}
+.achievement-section{margin-bottom:30px}
+.achievement-section h3{color:#60a5fa;margin-bottom:20px;font-size:1.2rem}
+
+/* Screen transition states for landing/auth/dashboard/courses/playground */
+.screen{position:relative;opacity:0;transform:translateX(100%);transition:transform .44s cubic-bezier(.22,.61,.36,1),opacity .34s ease;pointer-events:none}
+.screen.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.screen.slide-out-left{transform:translateX(-100%);opacity:0}
+.screen.slide-out-right{transform:translateX(100%);opacity:0}
+.screen.slide-in-from-right{transform:translateX(100%);opacity:0}
+.screen.slide-in-from-left{transform:translateX(-100%);opacity:0}
+.screen.slide-in-active{transform:translateX(0);opacity:1;pointer-events:auto}
+
+/* overlay for mobile sidebar */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:30;opacity:0;visibility:hidden;transition:opacity .24s .06s,visibility .24s .06s;pointer-events:none}
+.overlay.show{opacity:1;visibility:visible;pointer-events:auto}
+
+/* Responsive adjustments */
+@media (max-width: 1200px){
+	.auth-container{max-width:380px}
+	.course-resources{max-width:90%}
+}
+
+@media (max-width: 1024px){
+	.grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+	.resource-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+	.auth-container{max-width:360px}
+	.brand-title{font-size:1.4rem;letter-spacing:0.3px}
+}
+
+@media (max-width: 768px){
+	.main{padding:14px}
+	.main.shift{margin-left:0}
+	.sidebar{box-shadow:2px 0 12px rgba(0,0,0,0.6)}
+	.menu-btn{font-size:24px}
+	.grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+	.resource-grid{grid-template-columns:1fr}
+	.editor{grid-template-columns:1fr}
+	textarea{height:180px}
+	iframe{height:220px}
+	
+	/* Course resources mobile optimization */
+	.course-resources{max-width:100%;padding:0 10px}
+	.resource-section{padding:15px;margin-bottom:20px}
+	.resource-section h3{font-size:1.1rem}
+	.resource-card h4{font-size:1rem}
+	.exercise-grid{grid-template-columns:1fr}
+	
+	/* Header mobile optimization */
+	header{padding:8px 15px}
+	.brand-title{font-size:1.2rem;letter-spacing:0.2px}
+	
+	/* Auth container mobile optimization */
+	.auth-container{max-width:100%;margin:20px 10px;padding:20px}
+	
+	/* Glass effects mobile optimization */
+	.auth-container{backdrop-filter:blur(15px)}
+	.resource-section{backdrop-filter:blur(8px)}
+}
+
+@media (max-width: 480px){
+	.sidebar{width:80%;max-width:280px}
+	.brand-title{font-size:1.1rem;letter-spacing:0.1px}
+	.card{padding:14px}
+	input,button,textarea{font-size:16px}
+	textarea{height:150px}
+	iframe{height:180px}
+	.grid{gap:12px}
+	
+	/* Enhanced mobile optimization */
+	.main{padding:10px}
+	header{padding:6px 12px}
+	
+	/* Course resources mobile */
+	.resource-section{padding:12px;margin-bottom:15px;border-radius:8px}
+	.resource-section h3{font-size:1rem;margin-bottom:10px}
+	.resource-section p{font-size:0.9rem;margin-bottom:12px}
+	.resource-section li{font-size:0.9rem;margin:6px 0;padding-left:18px}
+	.resource-section li:before{left:2px}
+	
+	.resource-grid{gap:12px}
+	.resource-card{padding:15px;border-radius:6px}
+	.resource-card{min-height:240px}
+	.resource-card h4{font-size:0.95rem;margin-bottom:12px}
+	.resource-card ul{margin:0}
+	.resource-card li{margin:5px 0;padding-left:15px;font-size:0.85rem}
+	
+	.exercise-grid{gap:10px}
+	.exercise-btn{padding:10px;font-size:0.9rem;border-radius:6px}
+	
+	/* Auth forms mobile */
+	.auth-container{margin:15px 5px;padding:15px;border-radius:10px}
+	.form-group{margin-bottom:15px}
+	.form-label{font-size:0.9rem}
+	.form-input{padding:10px 12px;font-size:0.95rem;border-radius:6px}
+	.form-btn{padding:10px;font-size:0.95rem;border-radius:6px}
+	.password-toggle{font-size:1rem}
+	
+	/* Dashboard and navigation */
+	h2{font-size:1.3rem;margin-bottom:15px}
+	.grid{grid-template-columns:1fr;gap:10px}
+	
+	/* Playground mobile */
+	.editor{gap:8px}
+	textarea{font-size:14px;border-radius:6px}
+	iframe{border-radius:6px}
+	
+	/* Glass effects mobile optimization */
+	.auth-container{box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+	body.light .auth-container{box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+	.resource-section{box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+	body.light .resource-section{box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+}
+
+/* Video Modal Styles */
+.video-modal-content{background:rgba(30,41,59,0.95);backdrop-filter:blur(20px);border:1px solid rgba(148,163,184,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+body.light .video-modal{background:rgba(0,0,0,0.7)}
+body.light .video-modal-content{background:rgba(255,255,255,0.95);border:1px solid rgba(148,163,184,0.6);box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+
+@media (max-width: 360px){
+	.brand-title{font-size:1rem;letter-spacing:0px}
+	header{padding:4px 8px}
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce){
+	*{transition:none !important;animation:none !important}
+	.brand-title{
+		background: linear-gradient(45deg, #60a5fa, #22c55e);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		animation: none !important;
+		text-shadow: none !important;
+	}
+}
+
+/* Landing Page Styles */
+.hero-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 60px 20px;
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+	border-radius: 20px;
+	margin-bottom: 60px;
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	backdrop-filter: blur(10px);
+}
+
+.hero-title {
+	font-size: 3rem;
+	font-weight: 700;
+	color: #ffffff;
+	margin-bottom: 20px;
+	line-height: 1.2;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+	font-size: 1.2rem;
+	color: #94a3b8;
+	max-width: 600px;
+	line-height: 1.6;
+	margin-bottom: 30px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.hero-buttons {
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.hero-btn {
+	padding: 15px 30px;
+	border-radius: 10px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	border: none;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.hero-btn.primary {
+	background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+	color: white;
+	box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+}
+
+.hero-btn.primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(96, 165, 250, 0.6);
+}
+
+.hero-btn.secondary {
+	background: rgba(30, 41, 59, 0.5);
+	color: #60a5fa;
+	border: 1px solid rgba(96, 165, 250, 0.5);
+	backdrop-filter: blur(10px);
+}
+
+.hero-btn.secondary:hover {
+	background: rgba(96, 165, 250, 0.2);
+	transform: translateY(-2px);
+}
+
+.hero-stats {
+	display: flex;
+	gap: 40px;
+	margin-top: 40px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.stat-item {
+	text-align: center;
+}
+
+.stat-number {
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #60a5fa;
+	margin-bottom: 5px;
+}
+
+.stat-label {
+	font-size: 0.9rem;
+	color: #94a3b8;
+	font-weight: 500;
+}
+
+.section-title {
+	font-size: 2rem;
+	font-weight: 600;
+	color: #ffffff;
+	text-align: center;
+	margin-bottom: 40px;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.features-section {
+	margin-bottom: 60px;
+}
+
+.features-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 25px;
+	margin-top: 30px;
+}
+
+.feature-card {
+	background: rgba(30, 41, 59, 0.35);
+	padding: 30px;
+	border-radius: 15px;
+	border: 1px solid rgba(148, 163, 184, 0.3);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	text-align: center;
+}
+
+.feature-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+body.light .feature-card {
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid rgba(148, 163, 184, 0.6);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+	font-size: 3rem;
+	margin-bottom: 20px;
+}
+
+.feature-card h3 {
+	color: #60a5fa;
+	font-size: 1.3rem;
+	margin-bottom: 15px;
+	font-weight: 600;
+}
+
+.feature-card p {
+	color: #94a3b8;
+	line-height: 1.6;
+	font-size: 0.95rem;
+}
+
+.courses-preview {
+	margin-bottom: 60px;
+}
+
+.courses-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 25px;
+	margin-top: 30px;
+}
+
+.course-preview-card {
+	background: rgba(30, 41, 59, 0.35);
+	padding: 25px;
+	border-radius: 15px;
+	border: 1px solid rgba(148, 163, 184, 0.3);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+	transition: all 0.3s ease;
+	cursor: pointer;
+	text-align: center;
+}
+
+.course-preview-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+	background: rgba(30, 41, 59, 0.45);
+}
+
+body.light .course-preview-card {
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid rgba(148, 163, 184, 0.6);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+body.light .course-preview-card:hover {
+	background: rgba(255, 255, 255, 0.45);
+}
+
+.course-icon {
+	font-size: 2.5rem;
+	margin-bottom: 15px;
+}
+
+.course-preview-card h3 {
+	color: #60a5fa;
+	font-size: 1.2rem;
+	margin-bottom: 10px;
+	font-weight: 600;
+}
+
+.course-preview-card p {
+	color: #94a3b8;
+	font-size: 0.9rem;
+	margin-bottom: 15px;
+	line-height: 1.5;
+}
+
+.course-meta {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.8rem;
+	color: #64748b;
+	margin-top: 15px;
+}
+
+.view-all-courses {
+	text-align: center;
+	margin-top: 30px;
+}
+
+.outline-btn {
+	padding: 12px 25px;
+	border-radius: 8px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	border: 2px solid #60a5fa;
+	background: transparent;
+	color: #60a5fa;
+	text-decoration: none;
+	display: inline-block;
+}
+
+.outline-btn:hover {
+	background: #60a5fa;
+	color: white;
+	transform: translateY(-2px);
+}
+
+.testimonials-section {
+	margin-bottom: 60px;
+}
+
+.testimonials-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 25px;
+	margin-top: 30px;
+}
+
+.testimonial-card {
+	background: rgba(30, 41, 59, 0.35);
+	padding: 25px;
+	border-radius: 15px;
+	border: 1px solid rgba(148, 163, 184, 0.3);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+body.light .testimonial-card {
+	background: rgba(255, 255, 255, 0.35);
+	border: 1px solid rgba(148, 163, 184, 0.6);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-content {
+	color: #94a3b8;
+	font-style: italic;
+	line-height: 1.6;
+	margin-bottom: 20px;
+	font-size: 0.95rem;
+}
+
+.testimonial-author {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.author-avatar {
+	font-size: 2rem;
+}
+
+.author-name {
+	color: #60a5fa;
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.author-title {
+	color: #64748b;
+	font-size: 0.8rem;
+}
+
+.cta-section {
+	background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+	padding: 60px 20px;
+	border-radius: 20px;
+	text-align: center;
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	backdrop-filter: blur(10px);
+}
+
+.cta-content h2 {
+	color: #ffffff;
+	font-size: 2rem;
+	margin-bottom: 15px;
+	font-weight: 600;
+}
+
+.cta-content p {
+	color: #94a3b8;
+	font-size: 1.1rem;
+	margin-bottom: 30px;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	line-height: 1.6;
+}
+
+.cta-buttons {
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+/* Responsive Design for Landing Page */
+@media (max-width: 768px) {
+	.hero-title {
+		font-size: 2rem;
+	}
+	
+	.hero-subtitle {
+		font-size: 1rem;
+	}
+	
+	.hero-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+	
+	.hero-stats {
+		flex-direction: column;
+		gap: 20px;
+	}
+	
+	.section-title {
+		font-size: 1.5rem;
+	}
+	
+	.features-grid,
+	.testimonials-grid {
+		grid-template-columns: 1fr;
+	}
+	
+	.courses-grid {
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	}
+	
+	.cta-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (max-width: 480px) {
+	.hero-section {
+		padding: 40px 15px;
+	}
+	
+	.feature-card,
+	.course-preview-card,
+	.testimonial-card {
+		padding: 20px;
+	}
+	
+	.hero-title {
+		font-size: 1.8rem;
+	}
+	
+	.stat-number {
+		font-size: 2rem;
+	}
+}
+
+/* Custom Alert Styles */
+.custom-alert{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center}
+.alert-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)}
+.alert-modal{position:relative;background:#1e293b;border-radius:16px;padding:0;margin:20px;max-width:400px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);animation:alertSlideIn 0.3s ease-out}
+body.light .alert-modal{background:#f8fafc;border:1px solid rgba(0,0,0,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.1)}
+.alert-content{padding:24px;text-align:center}
+.alert-icon{font-size:2.5rem;margin-bottom:16px}
+.alert-message{font-size:1rem;line-height:1.5;margin-bottom:20px;color:#e2e8f0}
+body.light .alert-message{color:#475569}
+.alert-close{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white;border:none;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;transition:.2s}
+.alert-close:hover{background:linear-gradient(135deg,#3b82f6,#2563eb);transform:translateY(-1px)}
+.alert-close:focus{outline:2px solid #60a5fa;outline-offset:2px}
+
+@keyframes alertSlideIn{
+	0%{transform:scale(0.8);opacity:0}
+	100%{transform:scale(1);opacity:1}
+}
+
+/* Fallback visibility for active screens - ensures display on load */
+.screen.active {
+	opacity: 1 !important;
+	transform: translateX(0) !important;
+	pointer-events: auto !important;
+	visibility: visible !important;
+}
+
+/* Auth screen fallback for first load */
+#auth {
+	z-index: 10 !important;
+	position: relative !important;
+}
+
+/* Desktop Navigation Styles */
+@media (min-width: 769px) {
+	.desktop-nav { display: flex; }
+	.menu-btn { display: none; }
+	.sidebar { display: none; }
+	.main { margin-left: 0 !important; }
+	.overlay { display: none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="coding-bg">
+	<div class="code-particle" style="left:10%;animation-delay:0s">Hello World!</div>
+	<div class="code-particle" style="left:20%;animation-delay:-2s">print("Hi!")</div>
+	<div class="code-particle" style="left:30%;animation-delay:-4s">console.log()</div>
+	<div class="code-particle" style="left:40%;animation-delay:-6s">let name = ""</div>
+	<div class="code-particle" style="left:50%;animation-delay:-8s">if (true) { }</div>
+	<div class="code-particle" style="left:60%;animation-delay:-10s">for (let i = 0;</div>
+	<div class="code-particle" style="left:70%;animation-delay:-12s">function add()</div>
+	<div class="code-particle" style="left:80%;animation-delay:-14s">const data = []</div>
+	<div class="code-particle" style="left:90%;animation-delay:-16s">class Person</div>
+	<div class="code-particle" style="left:15%;animation-delay:-18s">&lt;h1&gt;Title&lt;/h1&gt;</div>
+	<div class="code-particle" style="left:25%;animation-delay:-20s">.myClass { }</div>
+	<div class="code-particle" style="left:35%;animation-delay:-22s">color: blue;</div>
+	<div class="code-particle" style="left:45%;animation-delay:-24s">margin: 10px;</div>
+	<div class="code-particle" style="left:55%;animation-delay:-26s">Click me!</div>
+	<div class="code-particle" style="left:65%;animation-delay:-28s">Submit</div>
+	<div class="code-particle" style="left:75%;animation-delay:-30s">Welcome back</div>
+	<div class="code-particle" style="left:85%;animation-delay:-32s">Loading...</div>
+	<div class="code-particle" style="left:5%;animation-delay:-34s">Success!</div>
+	<div class="code-particle" style="left:95%;animation-delay:-36s">Error 404</div>
+	<div class="code-particle" style="left:12%;animation-delay:-38s">var x = 5;</div>
+	<div class="code-particle" style="left:22%;animation-delay:-40s">x + y = ?</div>
+	<div class="code-particle" style="left:32%;animation-delay:-42s">true or false</div>
+	<div class="code-particle" style="left:42%;animation-delay:-44s">while (true)</div>
+	<div class="code-particle" style="left:52%;animation-delay:-46s">try { } catch</div>
+	<div class="code-particle" style="left:62%;animation-delay:-48s">return value</div>
+	<div class="code-particle" style="left:72%;animation-delay:-50s">import React</div>
+	<div class="code-particle" style="left:82%;animation-delay:-52s">useState()</div>
+	<div class="code-particle" style="left:92%;animation-delay:-54s">useEffect()</div>
+	<div class="code-particle" style="left:8%;animation-delay:-56s">&lt;button&gt;</div>
+	<div class="code-particle" style="left:18%;animation-delay:-58s">&lt;/button&gt;</div>
+	<div class="code-particle" style="left:28%;animation-delay:-60s">onClick={}</div>
+	<div class="code-particle" style="left:38%;animation-delay:-62s">onChange={}</div>
+	<div class="code-particle" style="left:48%;animation-delay:-64s">fetch('/api')</div>
+	<div class="code-particle" style="left:58%;animation-delay:-66s">JSON.parse()</div>
+	<div class="code-particle" style="left:68%;animation-delay:-68s">localStorage</div>
+	<div class="code-particle" style="left:78%;animation-delay:-70s">document.body</div>
+	<div class="code-particle" style="left:88%;animation-delay:-72s">window.alert</div>
+	<div class="code-particle" style="left:2%;animation-delay:-74s">Math.random()</div>
+	<div class="code-particle" style="left:98%;animation-delay:-76s">Date.now()</div>
+	<div class="code-particle" style="left:14%;animation-delay:-78s">array.push()</div>
+	<div class="code-particle" style="left:24%;animation-delay:-80s">array.pop()</div>
+	<div class="code-particle" style="left:34%;animation-delay:-82s">string.length</div>
+	<div class="code-particle" style="left:44%;animation-delay:-84s">object.key</div>
+	<div class="code-particle" style="left:54%;animation-delay:-86s">=== vs ==</div>
+	<div class="code-particle" style="left:64%;animation-delay:-88s">&& and ||</div>
+	<div class="code-particle" style="left:74%;animation-delay:-90s">! not</div>
+	<div class="code-particle" style="left:84%;animation-delay:-92s">++ increment</div>
+	<div class="code-particle" style="left:94%;animation-delay:-94s">-- decrement</div>
+	<div class="code-particle" style="left:6%;animation-delay:-96s">template ${}</div>
+	<div class="code-particle" style="left:16%;animation-delay:-98s">async function</div>
+	<div class="code-particle" style="left:26%;animation-delay:-100s">await promise</div>
+	<div class="code-particle" style="left:36%;animation-delay:-102s">Promise.then()</div>
+	<div class="code-particle" style="left:46%;animation-delay:-104s">.catch()</div>
+	<div class="code-particle" style="left:56%;animation-delay:-106s">setTimeout()</div>
+	<div class="code-particle" style="left:66%;animation-delay:-108s">setInterval()</div>
+	<div class="code-particle" style="left:76%;animation-delay:-110s">clearTimeout</div>
+	<div class="code-particle" style="left:86%;animation-delay:-112s">addEventListener</div>
+	<div class="code-particle" style="left:96%;animation-delay:-114s">removeEventListener</div>
+	<div class="code-particle" style="left:4%;animation-delay:-116s">querySelector</div>
+	<div class="code-particle" style="left:11%;animation-delay:-118s">getElementById</div>
+	<div class="code-particle" style="left:21%;animation-delay:-120s">innerHTML</div>
+	<div class="code-particle" style="left:31%;animation-delay:-122s">textContent</div>
+	<div class="code-particle" style="left:41%;animation-delay:-124s">classList.add</div>
+	<div class="code-particle" style="left:51%;animation-delay:-126s">classList.remove</div>
+	<div class="code-particle" style="left:61%;animation-delay:-128s">style.display</div>
+	<div class="code-particle" style="left:71%;animation-delay:-130s">style.color</div>
+	<div class="code-particle" style="left:81%;animation-delay:-132s">createElement</div>
+	<div class="code-particle" style="left:91%;animation-delay:-134s">appendChild</div>
+	<div class="code-particle" style="left:7%;animation-delay:-136s">removeChild</div>
+	<div class="code-particle" style="left:17%;animation-delay:-138s">parentNode</div>
+	<div class="code-particle" style="left:27%;animation-delay:-140s">childNodes</div>
+	<div class="code-particle" style="left:37%;animation-delay:-142s">nextSibling</div>
+	<div class="code-particle" style="left:47%;animation-delay:-144s">previousSibling</div>
+	<div class="code-particle" style="left:57%;animation-delay:-146s">firstChild</div>
+	<div class="code-particle" style="left:67%;animation-delay:-148s">lastChild</div>
+	<div class="code-particle" style="left:77%;animation-delay:-150s">nodeType</div>
+	<div class="code-particle" style="left:87%;animation-delay:-152s">tagName</div>
+	<div class="code-particle" style="left:97%;animation-delay:-154s">getAttribute</div>
+	<div class="code-particle" style="left:3%;animation-delay:-156s">setAttribute</div>
+	<div class="code-particle" style="left:13%;animation-delay:-158s">hasAttribute</div>
+	<div class="code-particle" style="left:23%;animation-delay:-160s">removeAttribute</div>
+	<div class="code-particle" style="left:33%;animation-delay:-162s">dataset</div>
+	<div class="code-particle" style="left:43%;animation-delay:-164s">value</div>
+	<div class="code-particle" style="left:53%;animation-delay:-166s">checked</div>
+	<div class="code-particle" style="left:63%;animation-delay:-168s">selected</div>
+	<div class="code-particle" style="left:73%;animation-delay:-170s">disabled</div>
+	<div class="code-particle" style="left:83%;animation-delay:-172s">readonly</div>
+	<div class="code-particle" style="left:93%;animation-delay:-174s">required</div>
+	<div class="code-particle" style="left:9%;animation-delay:-176s">placeholder</div>
+	<div class="code-particle" style="left:19%;animation-delay:-178s">maxlength</div>
+	<div class="code-particle" style="left:29%;animation-delay:-180s">minlength</div>
+	<div class="code-particle" style="left:39%;animation-delay:-182s">pattern</div>
+	<div class="code-particle" style="left:49%;animation-delay:-184s">step</div>
+	<div class="code-particle" style="left:59%;animation-delay:-186s">min</div>
+	<div class="code-particle" style="left:69%;animation-delay:-188s">max</div>
+	<div class="code-particle" style="left:79%;animation-delay:-190s">multiple</div>
+	<div class="code-particle" style="left:89%;animation-delay:-192s">accept</div>
+	<div class="code-particle" style="left:99%;animation-delay:-194s">autocomplete</div>
+	<div class="code-particle" style="left:1%;animation-delay:-196s">autofocus</div>
+	<div class="code-particle" style="left:10.5%;animation-delay:-198s">form</div>
+	<div class="code-particle" style="left:20.5%;animation-delay:-200s">formaction</div>
+	<div class="code-particle" style="left:30.5%;animation-delay:-202s">formenctype</div>
+	<div class="code-particle" style="left:40.5%;animation-delay:-204s">formmethod</div>
+	<div class="code-particle" style="left:50.5%;animation-delay:-206s">formtarget</div>
+	<div class="code-particle" style="left:60.5%;animation-delay:-208s">formnovalidate</div>
+	<div class="code-particle" style="left:70.5%;animation-delay:-210s">novalidate</div>
+	<div class="code-particle" style="left:80.5%;animation-delay:-212s">validation</div>
+	<div class="code-particle" style="left:90.5%;animation-delay:-214s">valid</div>
+	<div class="code-particle" style="left:5.5%;animation-delay:-216s">invalid</div>
+	<div class="code-particle" style="left:15.5%;animation-delay:-218s">required</div>
+	<div class="code-particle" style="left:25.5%;animation-delay:-220s">optional</div>
+	<div class="code-particle" style="left:35.5%;animation-delay:-222s">email</div>
+	<div class="code-particle" style="left:45.5%;animation-delay:-224s">password</div>
+	<div class="code-particle" style="left:55.5%;animation-delay:-226s">text</div>
+	<div class="code-particle" style="left:65.5%;animation-delay:-228s">number</div>
+	<div class="code-particle" style="left:75.5%;animation-delay:-230s">tel</div>
+	<div class="code-particle" style="left:85.5%;animation-delay:-232s">url</div>
+	<div class="code-particle" style="left:95.5%;animation-delay:-234s">search</div>
+	<div class="code-particle" style="left:6.5%;animation-delay:-236s">range</div>
+	<div class="code-particle" style="left:16.5%;animation-delay:-238s">date</div>
+	<div class="code-particle" style="left:26.5%;animation-delay:-240s">time</div>
+	<div class="code-particle" style="left:36.5%;animation-delay:-242s">datetime</div>
+	<div class="code-particle" style="left:46.5%;animation-delay:-244s">month</div>
+	<div class="code-particle" style="left:56.5%;animation-delay:-246s">week</div>
+	<div class="code-particle" style="left:66.5%;animation-delay:-248s">color</div>
+	<div class="code-particle" style="left:76.5%;animation-delay:-250s">file</div>
+	<div class="code-particle" style="left:86.5%;animation-delay:-252s">hidden</div>
+	<div class="code-particle" style="left:96.5%;animation-delay:-254s">checkbox</div>
+	<div class="code-particle" style="left:7.5%;animation-delay:-256s">radio</div>
+	<div class="code-particle" style="left:17.5%;animation-delay:-258s">select</div>
+	<div class="code-particle" style="left:27.5%;animation-delay:-260s">option</div>
+	<div class="code-particle" style="left:37.5%;animation-delay:-262s">optgroup</div>
+	<div class="code-particle" style="left:47.5%;animation-delay:-264s">textarea</div>
+	<div class="code-particle" style="left:57.5%;animation-delay:-266s">label</div>
+	<div class="code-particle" style="left:67.5%;animation-delay:-268s">fieldset</div>
+	<div class="code-particle" style="left:77.5%;animation-delay:-270s">legend</div>
+	<div class="code-particle" style="left:87.5%;animation-delay:-272s">datalist</div>
+	<div class="code-particle" style="left:97.5%;animation-delay:-274s">output</div>
+	<div class="code-particle" style="left:8.5%;animation-delay:-276s">progress</div>
+	<div class="code-particle" style="left:18.5%;animation-delay:-278s">meter</div>
+	<div class="code-particle" style="left:28.5%;animation-delay:-280s">details</div>
+	<div class="code-particle" style="left:38.5%;animation-delay:-282s">summary</div>
+	<div class="code-particle" style="left:48.5%;animation-delay:-284s">dialog</div>
+	<div class="code-particle" style="left:58.5%;animation-delay:-286s">menu</div>
+	<div class="code-particle" style="left:68.5%;animation-delay:-288s">menuitem</div>
+	<div class="code-particle" style="left:78.5%;animation-delay:-290s">contextmenu</div>
+	<div class="code-particle" style="left:88.5%;animation-delay:-292s">toolbar</div>
+	<div class="code-particle" style="left:98.5%;animation-delay:-294s">command</div>
+	<div class="code-particle" style="left:9.5%;animation-delay:-296s">keygen</div>
+	<div class="code-particle" style="left:19.5%;animation-delay:-298s">keytype</div>
+	<div class="code-particle" style="left:29.5%;animation-delay:-300s">challenge</div>
+	<div class="code-particle" style="left:39.5%;animation-delay:-302s">keyparams</div>
+	<div class="code-particle" style="left:49.5%;animation-delay:-304s">pubkey-cred</div>
+	<div class="code-particle" style="left:59.5%;animation-delay:-306s">attestation</div>
+	<div class="code-particle" style="left:69.5%;animation-delay:-308s">transport</div>
+	<div class="code-particle" style="left:79.5%;animation-delay:-310s">extensions</div>
+	<div class="code-particle" style="left:89.5%;animation-delay:-312s">client-data</div>
+	<div class="code-particle" style="left:99.5%;animation-delay:-314s">authenticator</div>
+	<div class="code-particle" style="left:0.5%;animation-delay:-316s">credential</div>
+	<div class="code-particle" style="left:10.2%;animation-delay:-318s">assertion</div>
+	<div class="code-particle" style="left:20.2%;animation-delay:-320s">signature</div>
+	<div class="code-particle" style="left:30.2%;animation-delay:-322s">algorithm</div>
+	<div class="code-particle" style="left:40.2%;animation-delay:-324s">curve</div>
+	<div class="code-particle" style="left:50.2%;animation-delay:-326s">point</div>
+	<div class="code-particle" style="left:60.2%;animation-delay:-328s">compression</div>
+	<div class="code-particle" style="left:70.2%;animation-delay:-330s">format</div>
+	<div class="code-particle" style="left:80.2%;animation-delay:-332s">encoding</div>
+	<div class="code-particle" style="left:90.2%;animation-delay:-334s">decoding</div>
+	<div class="code-particle" style="left:5.2%;animation-delay:-336s">parsing</div>
+	<div class="code-particle" style="left:15.2%;animation-delay:-338s">serialization</div>
+	<div class="code-particle" style="left:25.2%;animation-delay:-340s">deserialization</div>
+	<div class="code-particle" style="left:35.2%;animation-delay:-342s">marshalling</div>
+	<div class="code-particle" style="left:45.2%;animation-delay:-344s">unmarshalling</div>
+	<div class="code-particle" style="left:55.2%;animation-delay:-346s">streaming</div>
+	<div class="code-particle" style="left:65.2%;animation-delay:-348s">buffering</div>
+	<div class="code-particle" style="left:75.2%;animation-delay:-350s">caching</div>
+	<div class="code-particle" style="left:85.2%;animation-delay:-352s">memoization</div>
+	<div class="code-particle" style="left:95.2%;animation-delay:-354s">optimization</div>
+	<div class="code-particle" style="left:6.2%;animation-delay:-356s">performance</div>
+	<div class="code-particle" style="left:16.2%;animation-delay:-358s">efficiency</div>
+	<div class="code-particle" style="left:26.2%;animation-delay:-360s">scalability</div>
+	<div class="code-particle" style="left:36.2%;animation-delay:-362s">reliability</div>
+	<div class="code-particle" style="left:46.2%;animation-delay:-364s">maintainability</div>
+	<div class="code-particle" style="left:56.2%;animation-delay:-366s">readability</div>
+	<div class="code-particle" style="left:66.2%;animation-delay:-368s">usability</div>
+	<div class="code-particle" style="left:76.2%;animation-delay:-370s">accessibility</div>
+	<div class="code-particle" style="left:86.2%;animation-delay:-372s">compatibility</div>
+	<div class="code-particle" style="left:96.2%;animation-delay:-374s">cross-browser</div>
+	<div class="code-particle" style="left:7.2%;animation-delay:-376s">responsive</div>
+	<div class="code-particle" style="left:17.2%;animation-delay:-378s">mobile-first</div>
+	<div class="code-particle" style="left:27.2%;animation-delay:-380s">desktop</div>
+	<div class="code-particle" style="left:37.2%;animation-delay:-382s">tablet</div>
+	<div class="code-particle" style="left:47.2%;animation-delay:-384s">touch</div>
+	<div class="code-particle" style="left:57.2%;animation-delay:-386s">gesture</div>
+	<div class="code-particle" style="left:67.2%;animation-delay:-388s">swipe</div>
+	<div class="code-particle" style="left:77.2%;animation-delay:-390s">pinch</div>
+	<div class="code-particle" style="left:87.2%;animation-delay:-392s">zoom</div>
+	<div class="code-particle" style="left:97.2%;animation-delay:-394s">scroll</div>
+	<div class="code-particle" style="left:8.2%;animation-delay:-396s">hover</div>
+	<div class="code-particle" style="left:18.2%;animation-delay:-398s">focus</div>
+	<div class="code-particle" style="left:28.2%;animation-delay:-400s">active</div>
+	<div class="code-particle" style="left:38.2%;animation-delay:-402s">visited</div>
+	<div class="code-particle" style="left:48.2%;animation-delay:-404s">link</div>
+	<div class="code-particle" style="left:58.2%;animation-delay:-406s">target</div>
+	<div class="code-particle" style="left:68.2%;animation-delay:-408s">pseudo</div>
+	<div class="code-particle" style="left:78.2%;animation-delay:-410s">selector</div>
+	<div class="code-particle" style="left:88.2%;animation-delay:-412s">combinator</div>
+	<div class="code-particle" style="left:98.2%;animation-delay:-414s">descendant</div>
+	<div class="code-particle" style="left:9.2%;animation-delay:-416s">child</div>
+	<div class="code-particle" style="left:19.2%;animation-delay:-418s">adjacent</div>
+	<div class="code-particle" style="left:29.2%;animation-delay:-420s">sibling</div>
+	<div class="code-particle" style="left:39.2%;animation-delay:-422s">general</div>
+	<div class="code-particle" style="left:49.2%;animation-delay:-424s">universal</div>
+	<div class="code-particle" style="left:59.2%;animation-delay:-426s">attribute</div>
+	<div class="code-particle" style="left:69.2%;animation-delay:-428s">class</div>
+	<div class="code-particle" style="left:79.2%;animation-delay:-430s">id</div>
+	<div class="code-particle" style="left:89.2%;animation-delay:-432s">tag</div>
+	<div class="code-particle" style="left:99.2%;animation-delay:-434s">element</div>
+	<div class="code-particle" style="left:0.2%;animation-delay:-436s">property</div>
+	<div class="code-particle" style="left:10.8%;animation-delay:-438s">value</div>
+	<div class="code-particle" style="left:20.8%;animation-delay:-440s">unit</div>
+	<div class="code-particle" style="left:30.8%;animation-delay:-442s">pixel</div>
+	<div class="code-particle" style="left:40.8%;animation-delay:-444s">em</div>
+	<div class="code-particle" style="left:50.8%;animation-delay:-446s">rem</div>
+	<div class="code-particle" style="left:60.8%;animation-delay:-448s">percent</div>
+	<div class="code-particle" style="left:70.8%;animation-delay:-450s">viewport</div>
+	<div class="code-particle" style="left:80.8%;animation-delay:-452s">width</div>
+	<div class="code-particle" style="left:90.8%;animation-delay:-454s">height</div>
+	<div class="code-particle" style="left:5.8%;animation-delay:-456s">margin</div>
+	<div class="code-particle" style="left:15.8%;animation-delay:-458s">padding</div>
+	<div class="code-particle" style="left:25.8%;animation-delay:-460s">border</div>
+	<div class="code-particle" style="left:35.8%;animation-delay:-462s">background</div>
+	<div class="code-particle" style="left:45.8%;animation-delay:-464s">color</div>
+	<div class="code-particle" style="left:55.8%;animation-delay:-466s">font</div>
+	<div class="code-particle" style="left:65.8%;animation-delay:-468s">text</div>
+	<div class="code-particle" style="left:75.8%;animation-delay:-470s">display</div>
+	<div class="code-particle" style="left:85.8%;animation-delay:-472s">position</div>
+	<div class="code-particle" style="left:95.8%;animation-delay:-474s">float</div>
+	<div class="code-particle" style="left:6.8%;animation-delay:-476s">flex</div>
+	<div class="code-particle" style="left:16.8%;animation-delay:-478s">grid</div>
+	<div class="code-particle" style="left:26.8%;animation-delay:-480s">box</div>
+	<div class="code-particle" style="left:36.8%;animation-delay:-482s">shadow</div>
+	<div class="code-particle" style="left:46.8%;animation-delay:-484s">radius</div>
+	<div class="code-particle" style="left:56.8%;animation-delay:-486s">gradient</div>
+	<div class="code-particle" style="left:66.8%;animation-delay:-488s">transform</div>
+	<div class="code-particle" style="left:76.8%;animation-delay:-490s">transition</div>
+	<div class="code-particle" style="left:86.8%;animation-delay:-492s">animation</div>
+	<div class="code-particle" style="left:96.8%;animation-delay:-494s">keyframes</div>
+	<div class="code-particle" style="left:7.8%;animation-delay:-496s">media</div>
+	<div class="code-particle" style="left:17.8%;animation-delay:-498s">query</div>
+	<div class="code-particle" style="left:27.8%;animation-delay:-500s">breakpoint</div>
+	<div class="code-particle" style="left:37.8%;animation-delay:-502s">mobile</div>
+	<div class="code-particle" style="left:47.8%;animation-delay:-504s">tablet</div>
+	<div class="code-particle" style="left:57.8%;animation-delay:-506s">desktop</div>
+	<div class="code-particle" style="left:67.8%;animation-delay:-508s">print</div>
+	<div class="code-particle" style="left:77.8%;animation-delay:-510s">screen</div>
+	<div class="code-particle" style="left:87.8%;animation-delay:-512s">orientation</div>
+	<div class="code-particle" style="left:97.8%;animation-delay:-514s">portrait</div>
+	<div class="code-particle" style="left:8.8%;animation-delay:-516s">landscape</div>
+	<div class="code-particle" style="left:18.8%;animation-delay:-518s">hover</div>
+	<div class="code-particle" style="left:28.8%;animation-delay:-520s">pointer</div>
+	<div class="code-particle" style="left:38.8%;animation-delay:-522s">touch</div>
+	<div class="code-particle" style="left:48.8%;animation-delay:-524s">stylus</div>
+	<div class="code-particle" style="left:58.8%;animation-delay:-526s">mouse</div>
+	<div class="code-particle" style="left:68.8%;animation-delay:-528s">keyboard</div>
+	<div class="code-particle" style="left:78.8%;animation-delay:-530s">accessibility</div>
+	<div class="code-particle" style="left:88.8%;animation-delay:-532s">screen reader</div>
+	<div class="code-particle" style="left:98.8%;animation-delay:-534s">alt text</div>
+	<div class="code-particle" style="left:9.8%;animation-delay:-536s">aria</div>
+	<div class="code-particle" style="left:19.8%;animation-delay:-538s">role</div>
+	<div class="code-particle" style="left:29.8%;animation-delay:-540s">label</div>
+	<div class="code-particle" style="left:39.8%;animation-delay:-542s">tabindex</div>
+	<div class="code-particle" style="left:49.8%;animation-delay:-544s">focusable</div>
+	<div class="code-particle" style="left:59.8%;animation-delay:-546s">semantic</div>
+	<div class="code-particle" style="left:69.8%;animation-delay:-548s">heading</div>
+	<div class="code-particle" style="left:79.8%;animation-delay:-550s">navigation</div>
+	<div class="code-particle" style="left:89.8%;animation-delay:-552s">main</div>
+	<div class="code-particle" style="left:99.8%;animation-delay:-554s">aside</div>
+	<div class="code-particle" style="left:0.8%;animation-delay:-556s">article</div>
+	<div class="code-particle" style="left:10.3%;animation-delay:-558s">section</div>
+	<div class="code-particle" style="left:20.3%;animation-delay:-560s">header</div>
+	<div class="code-particle" style="left:30.3%;animation-delay:-562s">footer</div>
+	<div class="code-particle" style="left:40.3%;animation-delay:-564s">figure</div>
+	<div class="code-particle" style="left:50.3%;animation-delay:-566s">figcaption</div>
+	<div class="code-particle" style="left:60.3%;animation-delay:-568s">blockquote</div>
+	<div class="code-particle" style="left:70.3%;animation-delay:-570s">cite</div>
+	<div class="code-particle" style="left:80.3%;animation-delay:-572s">code</div>
+	<div class="code-particle" style="left:90.3%;animation-delay:-574s">pre</div>
+	<div class="code-particle" style="left:5.3%;animation-delay:-576s">kbd</div>
+	<div class="code-particle" style="left:15.3%;animation-delay:-578s">samp</div>
+	<div class="code-particle" style="left:25.3%;animation-delay:-580s">var</div>
+	<div class="code-particle" style="left:35.3%;animation-delay:-582s">abbr</div>
+	<div class="code-particle" style="left:45.3%;animation-delay:-584s">acronym</div>
+	<div class="code-particle" style="left:55.3%;animation-delay:-586s">dfn</div>
+	<div class="code-particle" style="left:65.3%;animation-delay:-588s">mark</div>
+	<div class="code-particle" style="left:75.3%;animation-delay:-590s">time</div>
+	<div class="code-particle" style="left:85.3%;animation-delay:-592s">progress</div>
+	<div class="code-particle" style="left:95.3%;animation-delay:-594s">meter</div>
+	<div class="code-particle" style="left:6.3%;animation-delay:-596s">details</div>
+	<div class="code-particle" style="left:16.3%;animation-delay:-598s">summary</div>
+	<div class="code-particle" style="left:26.3%;animation-delay:-600s">dialog</div>
+	<div class="code-particle" style="left:36.3%;animation-delay:-602s">menu</div>
+	<div class="code-particle" style="left:46.3%;animation-delay:-604s">menuitem</div>
+	<div class="code-particle" style="left:56.3%;animation-delay:-606s">contextmenu</div>
+	<div class="code-particle" style="left:66.3%;animation-delay:-608s">toolbar</div>
+	<div class="code-particle" style="left:76.3%;animation-delay:-610s">command</div>
+	<div class="code-particle" style="left:86.3%;animation-delay:-612s">keygen</div>
+	<div class="code-particle" style="left:96.3%;animation-delay:-614s">keytype</div>
+	<div class="code-particle" style="left:7.3%;animation-delay:-616s">challenge</div>
+	<div class="code-particle" style="left:17.3%;animation-delay:-618s">keyparams</div>
+	<div class="code-particle" style="left:27.3%;animation-delay:-620s">pubkey-cred</div>
+	<div class="code-particle" style="left:37.3%;animation-delay:-622s">attestation</div>
+	<div class="code-particle" style="left:47.3%;animation-delay:-624s">transport</div>
+	<div class="code-particle" style="left:57.3%;animation-delay:-626s">extensions</div>
+	<div class="code-particle" style="left:67.3%;animation-delay:-628s">client-data</div>
+	<div class="code-particle" style="left:77.3%;animation-delay:-630s">authenticator</div>
+	<div class="code-particle" style="left:87.3%;animation-delay:-632s">credential</div>
+	<div class="code-particle" style="left:97.3%;animation-delay:-634s">assertion</div>
+	<div class="code-particle" style="left:8.3%;animation-delay:-636s">signature</div>
+	<div class="code-particle" style="left:18.3%;animation-delay:-638s">algorithm</div>
+	<div class="code-particle" style="left:28.3%;animation-delay:-640s">curve</div>
+	<div class="code-particle" style="left:38.3%;animation-delay:-642s">point</div>
+	<div class="code-particle" style="left:48.3%;animation-delay:-644s">compression</div>
+	<div class="code-particle" style="left:58.3%;animation-delay:-646s">format</div>
+	<div class="code-particle" style="left:68.3%;animation-delay:-648s">encoding</div>
+	<div class="code-particle" style="left:78.3%;animation-delay:-650s">decoding</div>
+	<div class="code-particle" style="left:88.3%;animation-delay:-652s">parsing</div>
+	<div class="code-particle" style="left:98.3%;animation-delay:-654s">serialization</div>
+	<div class="code-particle" style="left:9.3%;animation-delay:-656s">deserialization</div>
+	<div class="code-particle" style="left:19.3%;animation-delay:-658s">marshalling</div>
+	<div class="code-particle" style="left:29.3%;animation-delay:-660s">unmarshalling</div>
+	<div class="code-particle" style="left:39.3%;animation-delay:-662s">streaming</div>
+	<div class="code-particle" style="left:49.3%;animation-delay:-664s">buffering</div>
+	<div class="code-particle" style="left:59.3%;animation-delay:-666s">caching</div>
+	<div class="code-particle" style="left:69.3%;animation-delay:-668s">memoization</div>
+	<div class="code-particle" style="left:79.3%;animation-delay:-670s">optimization</div>
+	<div class="code-particle" style="left:89.3%;animation-delay:-672s">performance</div>
+	<div class="code-particle" style="left:99.3%;animation-delay:-674s">efficiency</div>
+	<div class="code-particle" style="left:0.3%;animation-delay:-676s">scalability</div>
+	<div class="code-particle" style="left:10.6%;animation-delay:-678s">reliability</div>
+	<div class="code-particle" style="left:20.6%;animation-delay:-680s">maintainability</div>
+	<div class="code-particle" style="left:30.6%;animation-delay:-682s">readability</div>
+	<div class="code-particle" style="left:40.6%;animation-delay:-684s">usability</div>
+	<div class="code-particle" style="left:50.6%;animation-delay:-686s">accessibility</div>
+	<div class="code-particle" style="left:60.6%;animation-delay:-688s">compatibility</div>
+	<div class="code-particle" style="left:70.6%;animation-delay:-690s">cross-browser</div>
+	<div class="code-particle" style="left:80.6%;animation-delay:-692s">responsive</div>
+	<div class="code-particle" style="left:90.6%;animation-delay:-694s">mobile-first</div>
+	<div class="code-particle" style="left:5.6%;animation-delay:-696s">desktop</div>
+	<div class="code-particle" style="left:15.6%;animation-delay:-698s">tablet</div>
+	<div class="code-particle" style="left:25.6%;animation-delay:-700s">touch</div>
+	<div class="code-particle" style="left:35.6%;animation-delay:-702s">gesture</div>
+	<div class="code-particle" style="left:45.6%;animation-delay:-704s">swipe</div>
+	<div class="code-particle" style="left:55.6%;animation-delay:-706s">pinch</div>
+	<div class="code-particle" style="left:65.6%;animation-delay:-708s">zoom</div>
+	<div class="code-particle" style="left:75.6%;animation-delay:-710s">scroll</div>
+	<div class="code-particle" style="left:85.6%;animation-delay:-712s">hover</div>
+	<div class="code-particle" style="left:95.6%;animation-delay:-714s">focus</div>
+	<div class="code-particle" style="left:6.6%;animation-delay:-716s">active</div>
+	<div class="code-particle" style="left:16.6%;animation-delay:-718s">visited</div>
+	<div class="code-particle" style="left:26.6%;animation-delay:-720s">link</div>
+	<div class="code-particle" style="left:36.6%;animation-delay:-722s">target</div>
+	<div class="code-particle" style="left:46.6%;animation-delay:-724s">pseudo</div>
+	<div class="code-particle" style="left:56.6%;animation-delay:-726s">selector</div>
+	<div class="code-particle" style="left:66.6%;animation-delay:-728s">combinator</div>
+	<div class="code-particle" style="left:76.6%;animation-delay:-730s">descendant</div>
+	<div class="code-particle" style="left:86.6%;animation-delay:-732s">child</div>
+	<div class="code-particle" style="left:96.6%;animation-delay:-734s">adjacent</div>
+	<div class="code-particle" style="left:7.6%;animation-delay:-736s">sibling</div>
+	<div class="code-particle" style="left:17.6%;animation-delay:-738s">general</div>
+	<div class="code-particle" style="left:27.6%;animation-delay:-740s">universal</div>
+	<div class="code-particle" style="left:37.6%;animation-delay:-742s">attribute</div>
+	<div class="code-particle" style="left:47.6%;animation-delay:-744s">class</div>
+	<div class="code-particle" style="left:57.6%;animation-delay:-746s">id</div>
+	<div class="code-particle" style="left:67.6%;animation-delay:-748s">tag</div>
+	<div class="code-particle" style="left:77.6%;animation-delay:-750s">element</div>
+	<div class="code-particle" style="left:87.6%;animation-delay:-752s">property</div>
+	<div class="code-particle" style="left:97.6%;animation-delay:-754s">value</div>
+	<div class="code-particle" style="left:8.6%;animation-delay:-756s">unit</div>
+	<div class="code-particle" style="left:18.6%;animation-delay:-758s">pixel</div>
+	<div class="code-particle" style="left:28.6%;animation-delay:-760s">em</div>
+	<div class="code-particle" style="left:38.6%;animation-delay:-762s">rem</div>
+	<div class="code-particle" style="left:48.6%;animation-delay:-764s">percent</div>
+	<div class="code-particle" style="left:58.6%;animation-delay:-766s">viewport</div>
+	<div class="code-particle" style="left:68.6%;animation-delay:-768s">width</div>
+	<div class="code-particle" style="left:78.6%;animation-delay:-770s">height</div>
+	<div class="code-particle" style="left:88.6%;animation-delay:-772s">margin</div>
+	<div class="code-particle" style="left:98.6%;animation-delay:-774s">padding</div>
+	<div class="code-particle" style="left:9.6%;animation-delay:-776s">border</div>
+	<div class="code-particle" style="left:19.6%;animation-delay:-778s">background</div>
+	<div class="code-particle" style="left:29.6%;animation-delay:-780s">color</div>
+	<div class="code-particle" style="left:39.6%;animation-delay:-782s">font</div>
+	<div class="code-particle" style="left:49.6%;animation-delay:-784s">text</div>
+	<div class="code-particle" style="left:59.6%;animation-delay:-786s">display</div>
+	<div class="code-particle" style="left:69.6%;animation-delay:-788s">position</div>
+	<div class="code-particle" style="left:79.6%;animation-delay:-790s">float</div>
+	<div class="code-particle" style="left:89.6%;animation-delay:-792s">flex</div>
+	<div class="code-particle" style="left:99.6%;animation-delay:-794s">grid</div>
+	<div class="code-particle" style="left:0.6%;animation-delay:-796s">box</div>
+	<div class="code-particle" style="left:10.9%;animation-delay:-798s">shadow</div>
+	<div class="code-particle" style="left:20.9%;animation-delay:-800s">radius</div>
+	<div class="code-particle" style="left:30.9%;animation-delay:-802s">gradient</div>
+	<div class="code-particle" style="left:40.9%;animation-delay:-804s">transform</div>
+	<div class="code-particle" style="left:50.9%;animation-delay:-806s">transition</div>
+	<div class="code-particle" style="left:60.9%;animation-delay:-808s">animation</div>
+	<div class="code-particle" style="left:70.9%;animation-delay:-810s">keyframes</div>
+	<div class="code-particle" style="left:80.9%;animation-delay:-812s">media</div>
+	<div class="code-particle" style="left:90.9%;animation-delay:-814s">query</div>
+	<div class="code-particle" style="left:5.9%;animation-delay:-816s">breakpoint</div>
+	<div class="code-particle" style="left:15.9%;animation-delay:-818s">mobile</div>
+	<div class="code-particle" style="left:25.9%;animation-delay:-820s">tablet</div>
+	<div class="code-particle" style="left:35.9%;animation-delay:-822s">desktop</div>
+	<div class="code-particle" style="left:45.9%;animation-delay:-824s">print</div>
+	<div class="code-particle" style="left:55.9%;animation-delay:-826s">screen</div>
+	<div class="code-particle" style="left:65.9%;animation-delay:-828s">orientation</div>
+	<div class="code-particle" style="left:75.9%;animation-delay:-830s">portrait</div>
+	<div class="code-particle" style="left:85.9%;animation-delay:-832s">landscape</div>
+	<div class="code-particle" style="left:95.9%;animation-delay:-834s">hover</div>
+	<div class="code-particle" style="left:6.9%;animation-delay:-836s">pointer</div>
+	<div class="code-particle" style="left:16.9%;animation-delay:-838s">touch</div>
+	<div class="code-particle" style="left:26.9%;animation-delay:-840s">stylus</div>
+	<div class="code-particle" style="left:36.9%;animation-delay:-842s">mouse</div>
+	<div class="code-particle" style="left:46.9%;animation-delay:-844s">keyboard</div>
+	<div class="code-particle" style="left:56.9%;animation-delay:-846s">accessibility</div>
+	<div class="code-particle" style="left:66.9%;animation-delay:-848s">screen reader</div>
+	<div class="code-particle" style="left:76.9%;animation-delay:-850s">alt text</div>
+	<div class="code-particle" style="left:86.9%;animation-delay:-852s">aria</div>
+	<div class="code-particle" style="left:96.9%;animation-delay:-854s">role</div>
+	<div class="code-particle" style="left:7.9%;animation-delay:-856s">label</div>
+	<div class="code-particle" style="left:17.9%;animation-delay:-858s">tabindex</div>
+	<div class="code-particle" style="left:27.9%;animation-delay:-860s">focusable</div>
+	<div class="code-particle" style="left:37.9%;animation-delay:-862s">semantic</div>
+	<div class="code-particle" style="left:47.9%;animation-delay:-864s">heading</div>
+	<div class="code-particle" style="left:57.9%;animation-delay:-866s">navigation</div>
+	<div class="code-particle" style="left:67.9%;animation-delay:-868s">main</div>
+	<div class="code-particle" style="left:77.9%;animation-delay:-870s">aside</div>
+	<div class="code-particle" style="left:87.9%;animation-delay:-872s">article</div>
+	<div class="code-particle" style="left:97.9%;animation-delay:-874s">section</div>
+	<div class="code-particle" style="left:8.9%;animation-delay:-876s">header</div>
+	<div class="code-particle" style="left:18.9%;animation-delay:-878s">footer</div>
+	<div class="code-particle" style="left:28.9%;animation-delay:-880s">figure</div>
+	<div class="code-particle" style="left:38.9%;animation-delay:-882s">figcaption</div>
+	<div class="code-particle" style="left:48.9%;animation-delay:-884s">blockquote</div>
+	<div class="code-particle" style="left:58.9%;animation-delay:-886s">cite</div>
+	<div class="code-particle" style="left:68.9%;animation-delay:-888s">code</div>
+	<div class="code-particle" style="left:78.9%;animation-delay:-890s">pre</div>
+	<div class="code-particle" style="left:88.9%;animation-delay:-892s">kbd</div>
+	<div class="code-particle" style="left:98.9%;animation-delay:-894s">samp</div>
+	<div class="code-particle" style="left:9.9%;animation-delay:-896s">var</div>
+	<div class="code-particle" style="left:19.9%;animation-delay:-898s">abbr</div>
+	<div class="code-particle" style="left:29.9%;animation-delay:-900s">acronym</div>
+	<div class="code-particle" style="left:39.9%;animation-delay:-902s">dfn</div>
+	<div class="code-particle" style="left:49.9%;animation-delay:-904s">mark</div>
+	<div class="code-particle" style="left:59.9%;animation-delay:-906s">time</div>
+	<div class="code-particle" style="left:69.9%;animation-delay:-908s">progress</div>
+	<div class="code-particle" style="left:79.9%;animation-delay:-910s">meter</div>
+	<div class="code-particle" style="left:89.9%;animation-delay:-912s">details</div>
+	<div class="code-particle" style="left:99.9%;animation-delay:-914s">summary</div>
+	<div class="code-particle" style="left:0.9%;animation-delay:-916s">dialog</div>
+	<div class="code-particle" style="left:10.4%;animation-delay:-918s">menu</div>
+	<div class="code-particle" style="left:20.4%;animation-delay:-920s">menuitem</div>
+	<div class="code-particle" style="left:30.4%;animation-delay:-922s">contextmenu</div>
+	<div class="code-particle" style="left:40.4%;animation-delay:-924s">toolbar</div>
+	<div class="code-particle" style="left:50.4%;animation-delay:-926s">command</div>
+	<div class="code-particle" style="left:60.4%;animation-delay:-928s">keygen</div>
+	<div class="code-particle" style="left:70.4%;animation-delay:-930s">keytype</div>
+	<div class="code-particle" style="left:80.4%;animation-delay:-932s">challenge</div>
+	<div class="code-particle" style="left:90.4%;animation-delay:-934s">keyparams</div>
+	<div class="code-particle" style="left:5.4%;animation-delay:-936s">pubkey-cred</div>
+	<div class="code-particle" style="left:15.4%;animation-delay:-938s">attestation</div>
+	<div class="code-particle" style="left:25.4%;animation-delay:-940s">transport</div>
+	<div class="code-particle" style="left:35.4%;animation-delay:-942s">extensions</div>
+	<div class="code-particle" style="left:45.4%;animation-delay:-944s">client-data</div>
+	<div class="code-particle" style="left:55.4%;animation-delay:-946s">authenticator</div>
+	<div class="code-particle" style="left:65.4%;animation-delay:-948s">credential</div>
+	<div class="code-particle" style="left:75.4%;animation-delay:-950s">assertion</div>
+	<div class="code-particle" style="left:85.4%;animation-delay:-952s">signature</div>
+	<div class="code-particle" style="left:95.4%;animation-delay:-954s">algorithm</div>
+	<div class="code-particle" style="left:6.4%;animation-delay:-956s">curve</div>
+	<div class="code-particle" style="left:16.4%;animation-delay:-958s">point</div>
+	<div class="code-particle" style="left:26.4%;animation-delay:-960s">compression</div>
+	<div class="code-particle" style="left:36.4%;animation-delay:-962s">format</div>
+	<div class="code-particle" style="left:46.4%;animation-delay:-964s">encoding</div>
+	<div class="code-particle" style="left:56.4%;animation-delay:-966s">decoding</div>
+	<div class="code-particle" style="left:66.4%;animation-delay:-968s">parsing</div>
+	<div class="code-particle" style="left:76.4%;animation-delay:-970s">serialization</div>
+	<div class="code-particle" style="left:86.4%;animation-delay:-972s">deserialization</div>
+	<div class="code-particle" style="left:96.4%;animation-delay:-974s">marshalling</div>
+	<div class="code-particle" style="left:7.4%;animation-delay:-976s">unmarshalling</div>
+	<div class="code-particle" style="left:17.4%;animation-delay:-978s">streaming</div>
+	<div class="code-particle" style="left:27.4%;animation-delay:-980s">buffering</div>
+	<div class="code-particle" style="left:37.4%;animation-delay:-982s">caching</div>
+	<div class="code-particle" style="left:47.4%;animation-delay:-984s">memoization</div>
+	<div class="code-particle" style="left:57.4%;animation-delay:-986s">optimization</div>
+	<div class="code-particle" style="left:67.4%;animation-delay:-988s">performance</div>
+	<div class="code-particle" style="left:77.4%;animation-delay:-990s">efficiency</div>
+	<div class="code-particle" style="left:87.4%;animation-delay:-992s">scalability</div>
+	<div class="code-particle" style="left:97.4%;animation-delay:-994s">reliability</div>
+	<div class="code-particle" style="left:8.4%;animation-delay:-996s">maintainability</div>
+	<div class="code-particle" style="left:18.4%;animation-delay:-998s">readability</div>
+	<div class="code-particle" style="left:28.4%;animation-delay:-1000s">usability</div>
+	<div class="code-particle" style="left:38.4%;animation-delay:-1002s">accessibility</div>
+	<div class="code-particle" style="left:48.4%;animation-delay:-1004s">compatibility</div>
+	<div class="code-particle" style="left:58.4%;animation-delay:-1006s">cross-browser</div>
+	<div class="code-particle" style="left:68.4%;animation-delay:-1008s">responsive</div>
+	<div class="code-particle" style="left:78.4%;animation-delay:-1010s">mobile-first</div>
+	<div class="code-particle" style="left:88.4%;animation-delay:-1012s">desktop</div>
+	<div class="code-particle" style="left:98.4%;animation-delay:-1014s">tablet</div>
+	<div class="code-particle" style="left:9.4%;animation-delay:-1016s">touch</div>
+	<div class="code-particle" style="left:19.4%;animation-delay:-1018s">gesture</div>
+	<div class="code-particle" style="left:29.4%;animation-delay:-1020s">swipe</div>
+	<div class="code-particle" style="left:39.4%;animation-delay:-1022s">pinch</div>
+	<div class="code-particle" style="left:49.4%;animation-delay:-1024s">zoom</div>
+	<div class="code-particle" style="left:59.4%;animation-delay:-1026s">scroll</div>
+	<div class="code-particle" style="left:69.4%;animation-delay:-1028s">hover</div>
+	<div class="code-particle" style="left:79.4%;animation-delay:-1030s">focus</div>
+	<div class="code-particle" style="left:89.4%;animation-delay:-1032s">active</div>
+	<div class="code-particle" style="left:99.4%;animation-delay:-1034s">visited</div>
+	<div class="code-particle" style="left:0.4%;animation-delay:-1036s">link</div>
+	<div class="code-particle" style="left:10.7%;animation-delay:-1038s">target</div>
+	<div class="code-particle" style="left:20.7%;animation-delay:-1040s">pseudo</div>
+	<div class="code-particle" style="left:30.7%;animation-delay:-1042s">selector</div>
+	<div class="code-particle" style="left:40.7%;animation-delay:-1044s">combinator</div>
+	<div class="code-particle" style="left:50.7%;animation-delay:-1046s">descendant</div>
+	<div class="code-particle" style="left:60.7%;animation-delay:-1048s">child</div>
+	<div class="code-particle" style="left:70.7%;animation-delay:-1050s">adjacent</div>
+	<div class="code-particle" style="left:80.7%;animation-delay:-1052s">sibling</div>
+	<div class="code-particle" style="left:90.7%;animation-delay:-1054s">general</div>
+	<div class="code-particle" style="left:5.7%;animation-delay:-1056s">universal</div>
+	<div class="code-particle" style="left:15.7%;animation-delay:-1058s">attribute</div>
+	<div class="code-particle" style="left:25.7%;animation-delay:-1060s">class</div>
+	<div class="code-particle" style="left:35.7%;animation-delay:-1062s">id</div>
+	<div class="code-particle" style="left:45.7%;animation-delay:-1064s">tag</div>
+	<div class="code-particle" style="left:55.7%;animation-delay:-1066s">element</div>
+	<div class="code-particle" style="left:65.7%;animation-delay:-1068s">property</div>
+	<div class="code-particle" style="left:75.7%;animation-delay:-1070s">value</div>
+	<div class="code-particle" style="left:85.7%;animation-delay:-1072s">unit</div>
+	<div class="code-particle" style="left:95.7%;animation-delay:-1074s">pixel</div>
+	<div class="code-particle" style="left:6.7%;animation-delay:-1076s">em</div>
+	<div class="code-particle" style="left:16.7%;animation-delay:-1078s">rem</div>
+	<div class="code-particle" style="left:26.7%;animation-delay:-1080s">percent</div>
+	<div class="code-particle" style="left:36.7%;animation-delay:-1082s">viewport</div>
+	<div class="code-particle" style="left:46.7%;animation-delay:-1084s">width</div>
+	<div class="code-particle" style="left:56.7%;animation-delay:-1086s">height</div>
+	<div class="code-particle" style="left:66.7%;animation-delay:-1088s">margin</div>
+	<div class="code-particle" style="left:76.7%;animation-delay:-1090s">padding</div>
+	<div class="code-particle" style="left:86.7%;animation-delay:-1092s">border</div>
+	<div class="code-particle" style="left:96.7%;animation-delay:-1094s">background</div>
+	<div class="code-particle" style="left:7.7%;animation-delay:-1096s">color</div>
+	<div class="code-particle" style="left:17.7%;animation-delay:-1098s">font</div>
+	<div class="code-particle" style="left:27.7%;animation-delay:-1100s">text</div>
+	<div class="code-particle" style="left:37.7%;animation-delay:-1102s">display</div>
+	<div class="code-particle" style="left:47.7%;animation-delay:-1104s">position</div>
+	<div class="code-particle" style="left:57.7%;animation-delay:-1106s">float</div>
+	<div class="code-particle" style="left:67.7%;animation-delay:-1108s">flex</div>
+	<div class="code-particle" style="left:77.7%;animation-delay:-1110s">grid</div>
+	<div class="code-particle" style="left:87.7%;animation-delay:-1112s">box</div>
+	<div class="code-particle" style="left:97.7%;animation-delay:-1114s">shadow</div>
+	<div class="code-particle" style="left:8.7%;animation-delay:-1116s">radius</div>
+	<div class="code-particle" style="left:18.7%;animation-delay:-1118s">gradient</div>
+	<div class="code-particle" style="left:28.7%;animation-delay:-1120s">transform</div>
+	<div class="code-particle" style="left:38.7%;animation-delay:-1122s">transition</div>
+	<div class="code-particle" style="left:48.7%;animation-delay:-1124s">animation</div>
+	<div class="code-particle" style="left:58.7%;animation-delay:-1126s">keyframes</div>
+	<div class="code-particle" style="left:68.7%;animation-delay:-1128s">media</div>
+	<div class="code-particle" style="left:78.7%;animation-delay:-1130s">query</div>
+	<div class="code-particle" style="left:88.7%;animation-delay:-1132s">breakpoint</div>
+	<div class="code-particle" style="left:98.7%;animation-delay:-1134s">mobile</div>
+	<div class="code-particle" style="left:9.7%;animation-delay:-1136s">tablet</div>
+	<div class="code-particle" style="left:19.7%;animation-delay:-1138s">desktop</div>
+	<div class="code-particle" style="left:29.7%;animation-delay:-1140s">print</div>
+	<div class="code-particle" style="left:39.7%;animation-delay:-1142s">screen</div>
+	<div class="code-particle" style="left:49.7%;animation-delay:-1144s">orientation</div>
+	<div class="code-particle" style="left:59.7%;animation-delay:-1146s">portrait</div>
+	<div class="code-particle" style="left:69.7%;animation-delay:-1148s">landscape</div>
+	<div class="code-particle" style="left:79.7%;animation-delay:-1150s">hover</div>
+	<div class="code-particle" style="left:89.7%;animation-delay:-1152s">pointer</div>
+	<div class="code-particle" style="left:99.7%;animation-delay:-1154s">touch</div>
+	<div class="code-particle" style="left:0.7%;animation-delay:-1156s">stylus</div>
+	<div class="code-particle" style="left:10.1%;animation-delay:-1158s">mouse</div>
+	<div class="code-particle" style="left:20.1%;animation-delay:-1160s">keyboard</div>
+	<div class="code-particle" style="left:30.1%;animation-delay:-1162s">accessibility</div>
+	<div class="code-particle" style="left:40.1%;animation-delay:-1164s">screen reader</div>
+	<div class="code-particle" style="left:50.1%;animation-delay:-1166s">alt text</div>
+	<div class="code-particle" style="left:60.1%;animation-delay:-1168s">aria</div>
+	<div class="code-particle" style="left:70.1%;animation-delay:-1170s">role</div>
+	<div class="code-particle" style="left:80.1%;animation-delay:-1172s">label</div>
+	<div class="code-particle" style="left:90.1%;animation-delay:-1174s">tabindex</div>
+	<div class="code-particle" style="left:5.1%;animation-delay:-1176s">focusable</div>
+	<div class="code-particle" style="left:15.1%;animation-delay:-1178s">semantic</div>
+	<div class="code-particle" style="left:25.1%;animation-delay:-1180s">heading</div>
+	<div class="code-particle" style="left:35.1%;animation-delay:-1182s">navigation</div>
+	<div class="code-particle" style="left:45.1%;animation-delay:-1184s">main</div>
+	<div class="code-particle" style="left:55.1%;animation-delay:-1186s">aside</div>
+	<div class="code-particle" style="left:65.1%;animation-delay:-1188s">article</div>
+	<div class="code-particle" style="left:75.1%;animation-delay:-1190s">section</div>
+	<div class="code-particle" style="left:85.1%;animation-delay:-1192s">header</div>
+	<div class="code-particle" style="left:95.1%;animation-delay:-1194s">footer</div>
+	<div class="code-particle" style="left:6.1%;animation-delay:-1196s">figure</div>
+	<div class="code-particle" style="left:16.1%;animation-delay:-1198s">figcaption</div>
+	<div class="code-particle" style="left:26.1%;animation-delay:-1200s">blockquote</div>
+	<div class="code-particle" style="left:36.1%;animation-delay:-1202s">cite</div>
+	<div class="code-particle" style="left:46.1%;animation-delay:-1204s">code</div>
+	<div class="code-particle" style="left:56.1%;animation-delay:-1206s">pre</div>
+	<div class="code-particle" style="left:66.1%;animation-delay:-1208s">kbd</div>
+	<div class="code-particle" style="left:76.1%;animation-delay:-1210s">samp</div>
+	<div class="code-particle" style="left:86.1%;animation-delay:-1212s">var</div>
+	<div class="code-particle" style="left:96.1%;animation-delay:-1214s">abbr</div>
+	<div class="code-particle" style="left:7.1%;animation-delay:-1216s">acronym</div>
+	<div class="code-particle" style="left:17.1%;animation-delay:-1218s">dfn</div>
+	<div class="code-particle" style="left:27.1%;animation-delay:-1220s">mark</div>
+	<div class="code-particle" style="left:37.1%;animation-delay:-1222s">time</div>
+	<div class="code-particle" style="left:47.1%;animation-delay:-1224s">progress</div>
+	<div class="code-particle" style="left:57.1%;animation-delay:-1226s">meter</div>
+	<div class="code-particle" style="left:67.1%;animation-delay:-1228s">details</div>
+	<div class="code-particle" style="left:77.1%;animation-delay:-1230s">summary</div>
+	<div class="code-particle" style="left:87.1%;animation-delay:-1232s">dialog</div>
+	<div class="code-particle" style="left:97.1%;animation-delay:-1234s">menu</div>
+	<div class="code-particle" style="left:8.1%;animation-delay:-1236s">menuitem</div>
+	<div class="code-particle" style="left:18.1%;animation-delay:-1238s">contextmenu</div>
+	<div class="code-particle" style="left:28.1%;animation-delay:-1240s">toolbar</div>
+	<div class="code-particle" style="left:38.1%;animation-delay:-1242s">command</div>
+	<div class="code-particle" style="left:48.1%;animation-delay:-1244s">keygen</div>
+	<div class="code-particle" style="left:58.1%;animation-delay:-1246s">keytype</div>
+	<div class="code-particle" style="left:68.1%;animation-delay:-1248s">challenge</div>
+	<div class="code-particle" style="left:78.1%;animation-delay:-1250s">keyparams</div>
+	<div class="code-particle" style="left:88.1%;animation-delay:-1252s">pubkey-cred</div>
+	<div class="code-particle" style="left:98.1%;animation-delay:-1254s">attestation</div>
+	<div class="code-particle" style="left:9.1%;animation-delay:-1256s">transport</div>
+	<div class="code-particle" style="left:19.1%;animation-delay:-1258s">extensions</div>
+	<div class="code-particle" style="left:29.1%;animation-delay:-1260s">client-data</div>
+	<div class="code-particle" style="left:39.1%;animation-delay:-1262s">authenticator</div>
+	<div class="code-particle" style="left:49.1%;animation-delay:-1264s">credential</div>
+	<div class="code-particle" style="left:59.1%;animation-delay:-1266s">assertion</div>
+	<div class="code-particle" style="left:69.1%;animation-delay:-1268s">signature</div>
+	<div class="code-particle" style="left:79.1%;animation-delay:-1270s">algorithm</div>
+	<div class="code-particle" style="left:89.1%;animation-delay:-1272s">curve</div>
+	<div class="code-particle" style="left:99.1%;animation-delay:-1274s">point</div>
+	<div class="code-particle" style="left:0.1%;animation-delay:-1276s">compression</div>
+	<div class="code-particle" style="left:10%;animation-delay:-1278s">format</div>
+</div>
+
+<div class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation" aria-hidden="true">
+<h2>J_Dev Schools</h2>
+<a href="#" onclick="transitionToScreen('dashboard'); return false;">📊 Dashboard</a>
+<a href="#" onclick="transitionToScreen('courses'); return false;">📚 Courses</a>
+<a href="#" onclick="transitionToScreen('progress'); return false;">📈 Progress</a>
+<a href="#" onclick="transitionToScreen('achievements'); return false;">🏆 Achievements</a>
+<a href="#" onclick="transitionToScreen('settings'); return false;">⚙️ Settings</a>
+<a href="#" onclick="transitionToScreen('playground'); return false;">⚡ Playground</a>
+<a href="#" onclick="logout(); return false;">🚪 Logout</a>
+</div>
+
+<div id="overlay" class="overlay" onclick="closeSidebar()" tabindex="-1" aria-hidden="true"></div>
+
+<header style="display:none;flex-direction:row;justify-content:space-between;align-items:center">
+<button class="menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle menu" onclick="toggleMenu()">
+	<span class="menu-icon" aria-hidden="true">☰</span>
+	<span class="menu-chevron" aria-hidden="true">▸</span>
+</button>
+<h2 class="brand-title">CodeLearn Pro+ 🚀</h2>
+<nav class="desktop-nav">
+	<a href="#" onclick="showPage('dashboard')">Dashboard</a>
+	<a href="#" onclick="showPage('courses')">Courses</a>
+	<a href="#" onclick="showPage('course-resources')">Resources</a>
+	<a href="#" onclick="showPage('progress')">Progress</a>
+	<a href="#" onclick="showPage('achievements')">Achievements</a>
+	<a href="#" onclick="showPage('settings')">Settings</a>
+	<a href="#" onclick="showPage('playground')">Playground</a>
+</nav>
+<button class="theme-btn" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+</header>
+
+<div class="main" id="main">
+
+<!-- AUTH -->
+<div id="auth" class="screen">
+<!-- ROLE SELECTOR -->
+<div id="role-selector" class="auth-container" style="text-align:center;padding:40px 20px;">
+<h2 style="margin-bottom:30px;text-align:center">Welcome to CodeLearn Pro+</h2>
+<p style="color:#94a3b8;margin-bottom:40px;font-size:1rem">Select your login type:</p>
+<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+<button class="form-btn" onclick="showAdminLogin()" style="flex:1;min-width:150px;background:linear-gradient(135deg, #60a5fa, #3b82f6);">🔐 Admin Login</button>
+<button class="form-btn" onclick="showStudentLogin()" style="flex:1;min-width:150px;background:linear-gradient(135deg, #22c55e, #16a34a);">👨‍🎓 Student Login</button>
+</div>
+</div>
+
+<!-- LOGIN FORM -->
+<div id="login-form" class="auth-login auth-container" style="display:none;">
+<button onclick="backToRoleSelector()" style="background:none;border:none;color:#60a5fa;cursor:pointer;margin-bottom:15px;text-align:left;text-decoration:underline;">← Back</button>
+<h2 style="margin-bottom:10px;text-align:center" id="login-title">Welcome Back</h2>
+<p style="text-align:center;color:#94a3b8;margin-bottom:25px;font-size:0.95rem" id="login-subtitle">Login to continue learning</p>
+<div class="form-group">
+	<label class="form-label">Email Address</label>
+	<input id="liEmail" class="form-input" placeholder="Enter your email" type="email">
+</div>
+<div class="form-group">
+	<label class="form-label">Password</label>
+	<div class="password-container">
+		<input id="liPass" class="form-input" placeholder="Enter your password" type="password">
+		<button type="button" class="password-toggle" onclick="togglePassword('liPass')" aria-label="Toggle password visibility">👁️</button>
+	</div>
+</div>
+<button class="form-btn" onclick="login()" id="login-btn">Login</button>
+<div class="form-divider" id="divider-login" style="display:none;"></div>
+<div class="auth-switch" id="signup-switch" style="display:none;">
+	Don't have an account? <a onclick="toggleAuthForm()">Sign up here</a>
+</div>
+</div>
+
+<!-- SIGNUP FORM -->
+<div class="auth-signup auth-container hidden">
+<h2 style="margin-bottom:10px;text-align:center">Create Account</h2>
+<p style="text-align:center;color:#94a3b8;margin-bottom:25px;font-size:0.95rem">Start learning to code today</p>
+<div class="form-group">
+	<label class="form-label">Email Address</label>
+	<input id="suEmail" class="form-input" placeholder="Enter your email" type="email">
+</div>
+<div class="form-group">
+	<label class="form-label">Password</label>
+	<div class="password-container">
+		<input id="suPass" class="form-input" placeholder="Create a strong password" type="password" oninput="checkPasswordStrength()">
+		<button type="button" class="password-toggle" onclick="togglePassword('suPass')" aria-label="Toggle password visibility">👁️</button>
+	</div>
+	<div class="strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
+	<div id="strengthText" class="strength-text"></div>
+</div>
+<div class="form-group">
+	<label class="form-label">Confirm Password</label>
+	<div class="password-container">
+		<input id="suConfirm" class="form-input" placeholder="Confirm password" type="password">
+		<button type="button" class="password-toggle" onclick="togglePassword('suConfirm')" aria-label="Toggle password visibility">👁️</button>
+	</div>
+</div>
+<button class="form-btn" onclick="signup()">Create Account</button>
+<div class="form-divider"></div>
+<div class="auth-switch">
+	<a onclick="backToRoleSelector()" style="text-decoration:underline;">← Back to Login Selection</a>
+</div>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="screen hidden">
+<!-- Hero Section -->
+<div class="hero-section">
+	<div class="hero-content">
+		<h1 class="hero-title">🚀 Master Web Development with CodeLearn Pro+</h1>
+		<p class="hero-subtitle">Transform your career with hands-on coding courses, interactive exercises, and personalized learning paths. Join thousands of developers who have accelerated their careers with our comprehensive platform.</p>
+		<div class="hero-buttons">
+			<button class="hero-btn primary" onclick="showStudentSignup()">🎯 Get Started Free</button>
+			<button class="hero-btn secondary" onclick="transitionToScreen('progress')">📊 View My Progress</button>
+		</div>
+	</div>
+	<div class="hero-stats">
+		<div class="stat-item">
+			<div class="stat-number">10,000+</div>
+			<div class="stat-label">Students</div>
+		</div>
+		<div class="stat-item">
+			<div class="stat-number">50+</div>
+			<div class="stat-label">Hours of Content</div>
+		</div>
+		<div class="stat-item">
+			<div class="stat-number">95%</div>
+			<div class="stat-label">Completion Rate</div>
+		</div>
+	</div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+	<h2 class="section-title">✨ Why Choose CodeLearn Pro+?</h2>
+	<div class="features-grid">
+		<div class="feature-card">
+			<div class="feature-icon">🎓</div>
+			<h3>Expert-Led Courses</h3>
+			<p>Learn from industry professionals with real-world experience. Our courses are designed by developers for developers.</p>
+		</div>
+		<div class="feature-card">
+			<div class="feature-icon">⚡</div>
+			<h3>Interactive Learning</h3>
+			<p>Practice with hands-on exercises, live code editors, and instant feedback. Theory meets practice in every lesson.</p>
+		</div>
+		<div class="feature-card">
+			<div class="feature-icon">📈</div>
+			<h3>Track Your Progress</h3>
+			<p>Monitor your learning journey with detailed analytics, achievements, and personalized recommendations.</p>
+		</div>
+		<div class="feature-card">
+			<div class="feature-icon">🏆</div>
+			<h3>Earn Certificates</h3>
+			<p>Complete courses and earn recognized certificates to showcase your skills to employers and peers.</p>
+		</div>
+		<div class="feature-card">
+			<div class="feature-icon">🌐</div>
+			<h3>Modern Technologies</h3>
+			<p>Stay current with the latest web technologies, frameworks, and best practices used in the industry today.</p>
+		</div>
+		<div class="feature-card">
+			<div class="feature-icon">💬</div>
+			<h3>Community Support</h3>
+			<p>Join a vibrant community of learners, get help when you need it, and collaborate on projects.</p>
+		</div>
+	</div>
+</div>
+
+<!-- Popular Courses Preview -->
+<div class="courses-preview">
+	<h2 class="section-title">🔥 Popular Courses</h2>
+	<div class="courses-grid">
+		<div class="course-preview-card" onclick="startCourse('HTML')">
+			<div class="course-icon">🏗️</div>
+			<h3>HTML Fundamentals</h3>
+			<p>Master semantic markup and webpage structure</p>
+			<div class="course-meta">
+				<span>🕒 8 hours</span>
+				<span>⭐ 4.9/5</span>
+			</div>
+		</div>
+		<div class="course-preview-card" onclick="startCourse('CSS')">
+			<div class="course-icon">🎨</div>
+			<h3>CSS Styling Mastery</h3>
+			<p>Create beautiful, responsive web designs</p>
+			<div class="course-meta">
+				<span>🕒 12 hours</span>
+				<span>⭐ 4.8/5</span>
+			</div>
+		</div>
+		<div class="course-preview-card" onclick="startCourse('JS')">
+			<div class="course-icon">⚡</div>
+			<h3>JavaScript Programming</h3>
+			<p>Build interactive web applications</p>
+			<div class="course-meta">
+				<span>🕒 15 hours</span>
+				<span>⭐ 4.9/5</span>
+			</div>
+		</div>
+	</div>
+	<div class="view-all-courses">
+		<button class="outline-btn" onclick="transitionToScreen('courses')">View All Courses →</button>
+	</div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="testimonials-section">
+	<h2 class="section-title">💬 What Our Students Say</h2>
+	<div class="testimonials-grid">
+		<div class="testimonial-card">
+			<div class="testimonial-content">
+				"CodeLearn Pro+ transformed my career! I went from knowing nothing about coding to landing a junior developer job in just 6 months."
+			</div>
+			<div class="testimonial-author">
+				<div class="author-avatar">👩‍💻</div>
+				<div class="author-info">
+					<div class="author-name">Sarah Chen</div>
+					<div class="author-title">Frontend Developer at TechCorp</div>
+				</div>
+			</div>
+		</div>
+		<div class="testimonial-card">
+			<div class="testimonial-content">
+				"The interactive exercises and real-world projects made learning JavaScript so much more engaging than traditional courses."
+			</div>
+			<div class="testimonial-author">
+				<div class="author-avatar">👨‍💼</div>
+				<div class="author-info">
+					<div class="author-name">Mike Johnson</div>
+					<div class="author-title">Full-Stack Developer</div>
+				</div>
+			</div>
+		</div>
+		<div class="testimonial-card">
+			<div class="testimonial-content">
+				"Finally, a platform that doesn't just teach you code but helps you build a portfolio and get hired. Highly recommended!"
+			</div>
+			<div class="testimonial-author">
+				<div class="author-avatar">👩‍🎓</div>
+				<div class="author-info">
+					<div class="author-name">Emma Rodriguez</div>
+					<div class="author-title">Software Engineer at StartupXYZ</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+	<div class="cta-content">
+		<h2>Ready to Start Your Coding Journey?</h2>
+		<p>Join thousands of successful developers who have transformed their careers with CodeLearn Pro+.</p>
+		<div class="cta-buttons">
+			<button class="hero-btn primary" onclick="transitionToScreen('courses')">🚀 Get Started Free</button>
+			<button class="hero-btn secondary" onclick="transitionToScreen('settings')">⚙️ Customize Experience</button>
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- COURSES -->
+<div id="courses" class="screen hidden">
+<h2>Courses 🎓</h2>
+<div class="grid">
+	<div class="card">
+		<h3>HTML Basics</h3>
+		<p class="card-intro">Get hands-on with semantic markup and webpage structure in easy steps.</p>
+		<div style="background:rgba(34,197,94,0.2);padding:10px;border-radius:6px;margin:10px 0;text-align:center;border:1px solid rgba(34,197,94,0.3)">
+			<p style="font-size:0.9rem;color:#22c55e;font-weight:600;margin:0">💰 $29.99</p>
+		</div>
+		<p style="color:#94a3b8;font-size:0.85rem;margin:8px 0;text-align:center" id="html-payment-status"></p>
+		<button onclick="startCourse('HTML')">Start Course</button>
+	</div>
+	<div class="card">
+		<h3>CSS Styling</h3>
+		<p class="card-intro">Learn layout, colors, responsive design and advanced styling techniques.</p>
+		<div style="background:rgba(34,197,94,0.2);padding:10px;border-radius:6px;margin:10px 0;text-align:center;border:1px solid rgba(34,197,94,0.3)">
+			<p style="font-size:0.9rem;color:#22c55e;font-weight:600;margin:0">💰 $29.99</p>
+		</div>
+		<p style="color:#94a3b8;font-size:0.85rem;margin:8px 0;text-align:center" id="css-payment-status"></p>
+		<button onclick="startCourse('CSS')">Start Course</button>
+	</div>
+	<div class="card">
+		<h3>JavaScript</h3>
+		<p class="card-intro">Build interactive sites with variables, events, DOM, and async logic.</p>
+		<div style="background:rgba(34,197,94,0.2);padding:10px;border-radius:6px;margin:10px 0;text-align:center;border:1px solid rgba(34,197,94,0.3)">
+			<p style="font-size:0.9rem;color:#22c55e;font-weight:600;margin:0">💰 $39.99</p>
+		</div>
+		<p style="color:#94a3b8;font-size:0.85rem;margin:8px 0;text-align:center" id="js-payment-status"></p>
+		<button onclick="startCourse('JS')">Start Course</button>
+	</div>
+</div>
+</div>
+
+<!-- COURSE RESOURCES -->
+<div id="course-resources" class="screen hidden">
+<h2 id="course-title">Course Resources 📚</h2>
+<div id="course-content">
+<!-- Content will be dynamically loaded based on course -->
+</div>
+<button onclick="transitionToScreen('courses')" class="form-btn" style="margin-top:20px;width:auto;padding:10px 20px;">← Back to Courses</button>
+</div>
+
+<!-- PROGRESS DASHBOARD -->
+<div id="progress" class="screen hidden">
+<h2>📈 Your Progress</h2>
+
+<div style="margin-bottom:30px">
+	<h3 style="color:#60a5fa;margin-bottom:15px">📊 Overall Learning Statistics</h3>
+	<div class="stat-box">📚 Total Courses: <strong id="statTotalCourses">3</strong></div>
+	<div class="stat-box">✅ Courses Completed: <strong id="statCoursesCompleted">1</strong></div>
+	<div class="stat-box">🔥 Learning Streak: <strong id="statLearningStreak">7 days</strong></div>
+	<div class="stat-box">⏱️ Total Hours: <strong id="statTotalHours">24.5 hrs</strong></div>
+	<div class="stat-box">📝 Exercises Completed: <strong id="statExercisesCompleted">12</strong></div>
+	<div class="stat-box">🎯 Current Goal: <strong id="statCurrentGoal">50 hrs/month</strong></div>
+	<div class="stat-box">📖 Total Lessons: <strong id="statTotalLessons">30</strong></div>
+	<div class="stat-box">✅ Lessons Completed: <strong id="statLessonsCompleted">15</strong></div>
+	<div class="stat-box">📈 Completion Rate: <strong id="statCompletionRate">50%</strong></div>
+</div>
+
+<div style="margin-bottom:20px;padding:15px;background:rgba(34,197,94,0.2);border-radius:8px;border:1px solid rgba(34,197,94,0.3)">
+	<p style="color:#22c55e;font-size:0.95rem">🎉 Great work! You're maintaining a solid learning pace. Keep it up to unlock more badges!</p>
+</div>
+
+<div class="progress-card">
+	<h3>🏫 HTML Basics Progress</h3>
+	<div class="progress-bar-container">
+		<div class="progress-bar" id="htmlProgress" style="width:0%">0%</div>
+	</div>
+</div>
+
+<div class="progress-card">
+	<h3>🎨 CSS Styling Progress</h3>
+	<div class="progress-bar-container">
+		<div class="progress-bar" id="cssProgress" style="width:0%">0%</div>
+	</div>
+</div>
+
+<div class="progress-card">
+	<h3>⚡ JavaScript Programming Progress</h3>
+	<div class="progress-bar-container">
+		<div class="progress-bar" id="jsProgress" style="width:30%">30%</div>
+	</div>
+	<p style="font-size:0.9rem;color:#94a3b8;margin-top:10px">✓ 3 of 10 lessons completed | Last lesson: "Variables & Data Types"</p>
+	<p style="font-size:0.85rem;color:#64748b;margin-top:8px">Next: Functions & Scope (2.5 hours)</p>
+</div>
+
+<div style="margin-top:30px;padding:20px;background:rgba(30,41,59,0.35);border-radius:10px;border:1px solid rgba(148,163,184,0.3)">
+	<h3 style="color:#60a5fa;margin-bottom:15px">📅 Weekly Activity</h3>
+	<p style="color:#94a3b8;font-size:0.9rem">Monday: 2.5 hrs | Tuesday: 3 hrs | Wednesday: 2 hrs | Thursday: 3.5 hrs | Friday: 2 hrs | Saturday: 4 hrs | Sunday: Rest day</p>
+</div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements" class="screen hidden">
+<h2>🏆 Achievements & Badges</h2>
+
+<div style="margin-bottom:25px;padding:15px;background:rgba(96,165,250,0.2);border-radius:8px;border:1px solid rgba(96,165,250,0.3)">
+	<p style="color:#60a5fa;font-size:0.95rem">🎖️ You have unlocked <strong>4 badges</strong> so far! Unlock more by completing courses and challenges.</p>
+</div>
+
+<div class="achievement-section">
+	<h3>🌟 Unlocked Badges - Amazing Work!</h3>
+	<div class="badge-grid">
+		<div class="badge">
+			<div class="badge-icon">🚀</div>
+			<div class="badge-title">Getting Started</div>
+			<div class="badge-desc">Complete first lesson</div>
+			<p style="font-size:0.7rem;color:#22c55e;margin-top:10px">✓ Unlocked on Mar 15</p>
+		</div>
+		<div class="badge">
+			<div class="badge-icon">📚</div>
+			<div class="badge-title">Course Master</div>
+			<div class="badge-desc">Complete 1 full course</div>
+			<p style="font-size:0.7rem;color:#22c55e;margin-top:10px">✓ Unlocked on Mar 22</p>
+		</div>
+		<div class="badge">
+			<div class="badge-icon">⚡</div>
+			<div class="badge-title">Speed Coder</div>
+			<div class="badge-desc">Complete 5 exercises</div>
+			<p style="font-size:0.7rem;color:#22c55e;margin-top:10px">✓ Unlocked on Mar 25</p>
+		</div>
+		<div class="badge">
+			<div class="badge-icon">🔥</div>
+			<div class="badge-title">7 Day Streak</div>
+			<div class="badge-desc">Learn 7 days in a row</div>
+			<p style="font-size:0.7rem;color:#22c55e;margin-top:10px">✓ Unlocked on Mar 30</p>
+		</div>
+	</div>
+</div>
+
+<div class="achievement-section">
+	<h3>🔒 Locked Badges - Keep Learning!</h3>
+	<p style="color:#94a3b8;font-size:0.9rem;margin-bottom:15px">Complete the requirements below to unlock these exclusive badges:</p>
+	<div class="badge-grid">
+		<div class="badge locked">
+			<div class="badge-icon">💎</div>
+			<div class="badge-title">Pro Developer</div>
+			<div class="badge-criteria">📋 Complete all 3 courses</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Progress: 1/3</p>
+		</div>
+		<div class="badge locked">
+			<div class="badge-icon">⭐</div>
+			<div class="badge-title">Perfect Streak</div>
+			<div class="badge-criteria">📅 30 day learning streak</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Progress: 7/30 days</p>
+		</div>
+		<div class="badge locked">
+			<div class="badge-icon">🧠</div>
+			<div class="badge-title">Exercise Expert</div>
+			<div class="badge-criteria">💪 Complete 25 exercises</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Progress: 12/25</p>
+		</div>
+		<div class="badge locked">
+			<div class="badge-icon">👑</div>
+			<div class="badge-title">Legend</div>
+			<div class="badge-criteria">🚀 100+ hours of learning</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Progress: 24.5/100 hours</p>
+		</div>
+		<div class="badge locked">
+			<div class="badge-icon">🎓</div>
+			<div class="badge-title">Certification Master</div>
+			<div class="badge-criteria">📜 Pass all course exams</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Progress: 1/3 exams</p>
+		</div>
+		<div class="badge locked">
+			<div class="badge-icon">🌈</div>
+			<div class="badge-title">Rainbow Coder</div>
+			<div class="badge-criteria">🎨 Unlock all badges</div>
+			<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">Ultimate Challenge!</p>
+		</div>
+	</div>
+</div>
+
+<div style="margin-top:30px;padding:20px;background:rgba(30,41,59,0.35);border-radius:10px;border:1px solid rgba(148,163,184,0.3)">
+	<h3 style="color:#60a5fa;margin-bottom:15px">📊 Badge Statistics</h3>
+	<p style="color:#94a3b8;font-size:0.9rem">Total Unlocked: <strong style="color:#22c55e">4/10</strong> | Completion Rate: <strong style="color:#60a5fa">40%</strong></p>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="screen hidden">
+<h2>⚙️ Settings & Preferences</h2>
+
+<div class="settings-group">
+	<h3>🎨 Appearance & Theme</h3>
+	<div class="settings-item">
+		<label>Dark Mode</label>
+		<div class="toggle-switch active" onclick="toggleSettingTheme(this)"></div>
+	</div>
+	<div class="settings-item">
+		<label>Enable Animations</label>
+		<div class="toggle-switch active" onclick="toggleSetting(this, 'animations')"></div>
+	</div>
+	<div class="settings-item">
+		<label>Compact View</label>
+		<div class="toggle-switch" onclick="toggleSetting(this, 'compact')"></div>
+	</div>
+</div>
+
+<div class="settings-group">
+	<h3>🔔 Notifications & Reminders</h3>
+	<div class="settings-item">
+		<label>Email Notifications</label>
+		<div class="toggle-switch active" onclick="toggleSetting(this, 'notifications')"></div>
+	</div>
+	<div class="settings-item">
+		<label>Show Progress Badges</label>
+		<div class="toggle-switch active" onclick="toggleSetting(this, 'badges')"></div>
+	</div>
+	<div class="settings-item">
+		<label>Daily Learning Reminders</label>
+		<div class="toggle-switch" onclick="toggleSetting(this, 'reminders')"></div>
+	</div>
+	<div class="settings-item">
+		<label>Course Completion Alerts</label>
+		<div class="toggle-switch active" onclick="toggleSetting(this, 'courseAlerts')"></div>
+	</div>
+</div>
+
+<div class="settings-group">
+	<h3>👤 Account Settings</h3>
+	<div class="settings-item">
+		<label>Full Name</label>
+		<input type="text" class="settings-input" placeholder="Enter your name" value="John Developer">
+	</div>
+	<div class="settings-item">
+		<label>Email Address</label>
+		<input type="email" class="settings-input" placeholder="Enter your email" value="developer@example.com">
+	</div>
+	<div class="settings-item">
+		<label>Learning Goal (hours/week)</label>
+		<input type="number" class="settings-input" placeholder="e.g., 10" value="10">
+	</div>
+	<div class="settings-item">
+		<label>Preferred Language</label>
+		<select class="settings-input" style="cursor:pointer">
+			<option selected>English 🇬🇧</option>
+			<option>Spanish 🇪🇸</option>
+			<option>French 🇫🇷</option>
+			<option>German 🇩🇪</option>
+			<option>Chinese 🇨🇳</option>
+			<option>Japanese 🇯🇵</option>
+		</select>
+	</div>
+</div>
+
+<div class="settings-group">
+	<h3>🎯 Learning Preferences</h3>
+	<div class="settings-item">
+		<label>Difficulty Level</label>
+		<select class="settings-input" style="cursor:pointer">
+			<option>Beginner</option>
+			<option selected>Intermediate</option>
+			<option>Advanced</option>
+		</select>
+	</div>
+	<div class="settings-item">
+		<label>Preferred Learning Style</label>
+		<select class="settings-input" style="cursor:pointer">
+			<option selected>Videos + Text</option>
+			<option>Video Only</option>
+			<option>Text Only</option>
+			<option>Interactive Exercises</option>
+		</select>
+	</div>
+	<div class="settings-item">
+		<label>Show Recommended Courses</label>
+		<div class="toggle-switch active" onclick="toggleSetting(this, 'recommendations')"></div>
+	</div>
+</div>
+
+<div class="settings-group">
+	<h3>🔐 Privacy & Security</h3>
+	<div class="settings-item">
+		<label>Profile Visibility</label>
+		<select class="settings-input" style="cursor:pointer">
+			<option>Private</option>
+			<option selected>Friends Only</option>
+			<option>Public</option>
+		</select>
+	</div>
+	<div class="settings-item">
+		<label>Share Progress on Leaderboard</label>
+		<div class="toggle-switch" onclick="toggleSetting(this, 'leaderboard')"></div>
+	</div>
+	<div class="settings-item">
+		<label>Allow Marketing Emails</label>
+		<div class="toggle-switch" onclick="toggleSetting(this, 'marketing')"></div>
+	</div>
+</div>
+
+<div class="settings-group">
+	<h3>💾 Data Management</h3>
+	<p style="color:#94a3b8;font-size:0.9rem;margin-bottom:15px">Manage your data and account information:</p>
+	<button class="form-btn" style="margin-right:10px;margin-bottom:10px;background:#2563eb;width:100%" onclick="downloadProgress()">📥 Download My Learning Data</button>
+	<button class="form-btn" style="margin-right:10px;margin-bottom:10px;background:#7c3aed;width:100%" onclick="exportCertificate()">🎓 Export Certificates</button>
+	<button class="form-btn" style="margin-right:10px;margin-bottom:10px;background:#dc2626;width:100%" onclick="resetProgress()">🔄 Reset All Progress</button>
+	<button class="form-btn" style="background:#ef4444;width:100%" onclick="deleteAccount()">❌ Delete Account</button>
+</div>
+
+<div style="margin-top:20px;padding:15px;background:rgba(96,165,250,0.2);border-radius:8px;border:1px solid rgba(96,165,250,0.3)">
+	<p style="color:#60a5fa;font-size:0.85rem">ℹ️ Your changes are saved automatically. Last updated: Today at 10:30 AM</p>
+</div>
+</div>
+
+<!-- PLAYGROUND -->
+<div id="playground" class="screen hidden">
+<h2>Live Code Editor ⚡</h2>
+<div class="editor">
+<textarea id="htmlCode"><h1>Hello</h1></textarea>
+<textarea id="cssCode">h1{color:red}</textarea>
+</div>
+<button onclick="runCode()">Run</button>
+<iframe id="output"></iframe>
+</div>
+
+</div>
+
+<script>
+// Cache important elements for accessibility and behavior
+const sidebar = document.getElementById('sidebar');
+const main = document.getElementById('main');
+const overlay = document.getElementById('overlay');
+const auth = document.getElementById('auth');
+let currentScreen = 'auth';
+const menuBtn = document.querySelector('.menu-btn');
+const themeBtn = document.querySelector('.theme-btn');
+
+function openSidebar(){
+	sidebar.classList.add('active');
+	main.classList.add('shift');
+	overlay.classList.add('show');
+	sidebar.setAttribute('aria-hidden','false');
+	menuBtn.setAttribute('aria-expanded','true');
+	menuBtn.classList.add('open');
+	const first = sidebar.querySelector('a[href]');
+	if(first) first.focus();
+}
+
+function closeSidebar(){
+	sidebar.classList.remove('active');
+	main.classList.remove('shift');
+	overlay.classList.remove('show');
+	sidebar.setAttribute('aria-hidden','true');
+	menuBtn.setAttribute('aria-expanded','false');
+	menuBtn.classList.remove('open');
+	menuBtn.focus();
+}
+
+function toggleMenu(){
+	if (window.innerWidth > 768) return; // No sidebar on desktop
+	console.log('toggleMenu called, sidebar active:', sidebar.classList.contains('active'));
+	if(sidebar.classList.contains('active')) closeSidebar(); else openSidebar();
+}
+
+function showPage(p){
+	transitionToScreen(p);
+	// Auto-close sidebar on small screens after navigation
+	if(window.innerWidth <= 768) closeSidebar();
+}
+
+function showAuth(mode){
+	transitionToScreen('auth', mode);
+	if(mode==='login') liEmail.focus(); else suEmail.focus();
+	if(window.innerWidth <= 768) closeSidebar();
+}
+
+function transitionToScreen(targetId, mode){
+	const pages = ['auth','dashboard','courses','course-resources','progress','achievements','settings','playground'];
+	if(!pages.includes(targetId)) return;
+	const current = document.getElementById(currentScreen);
+	const target = document.getElementById(targetId);
+	if(currentScreen===targetId){
+		return;
+	}
+
+	const currentIndex = pages.indexOf(currentScreen);
+	const targetIndex = pages.indexOf(targetId);
+	const goingForward = targetIndex > currentIndex;
+
+	current.classList.remove('active','slide-in-active');
+	current.classList.add(goingForward?'slide-out-left':'slide-out-right');
+
+	target.classList.remove('hidden','slide-out-left','slide-out-right','slide-in-from-left','slide-in-from-right');
+	target.classList.add('screen');
+	target.classList.add(goingForward?'slide-in-from-right':'slide-in-from-left');
+
+	requestAnimationFrame(()=>{
+		target.classList.add('active','slide-in-active');
+		if(goingForward){
+			current.classList.add('slide-out-left');
+		}else{
+			current.classList.add('slide-out-right');
+		}
+	});
+
+	setTimeout(()=>{
+		current.classList.add('hidden');
+		current.classList.remove('slide-out-left','slide-out-right');
+		target.classList.remove('slide-in-from-left','slide-in-from-right','slide-in-active');
+	}, 480);
+
+	currentScreen = targetId;
+	// Update URL hash for GitHub Pages compatibility
+	window.location.hash = targetId;
+}
+
+/* Toggle between login and signup forms */
+function toggleAuthForm(){
+	const loginForm = document.getElementById('login-form');
+	const signupForm = document.querySelector('.auth-signup');
+	loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+	signupForm.classList.toggle('hidden');
+	// Clear form fields when switching
+	if(loginForm.style.display !== 'none'){
+		liEmail.focus();
+	}else{
+		suEmail.focus();
+	}
+}
+
+/* Check password strength */
+function checkPasswordStrength(){
+	const pass = document.getElementById('suPass').value;
+	const strengthBar = document.getElementById('strengthBar');
+	const strengthText = document.getElementById('strengthText');
+	let strength = 0;
+	if(pass.length >= 8) strength++;
+	if(pass.length >= 12) strength++;
+	if(/[a-z]/.test(pass) && /[A-Z]/.test(pass)) strength++;
+	if(/\d/.test(pass)) strength++;
+	if(/[!@#$%^&*]/.test(pass)) strength++;
+	const levels = ['', 'weak', 'fair', 'good', 'strong'];
+	const texts = ['', 'Weak password', 'Fair password', 'Good password', 'Strong password'];
+	strengthBar.className = 'strength-bar ' + levels[strength];
+	strengthText.textContent = texts[strength];
+}
+
+/* Toggle password visibility */
+function togglePassword(inputId){
+	const input = document.getElementById(inputId);
+	const button = input.nextElementSibling;
+	const isHidden = input.type === 'password';
+	input.type = isHidden ? 'text' : 'password';
+	button.textContent = isHidden ? '🙈' : '👁️';
+	button.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+}
+/* AUTH ROLE SELECTION */
+let currentLoginRole = 'student'; // Track current login role
+
+// Initialize default admin account
+function initializeAdminAccount(){
+	try {
+		let users = JSON.parse(localStorage.getItem('users') || '[]');
+		// Check if admin exists
+		if(!users.find(u => u.role === 'admin')){
+			// Create default admin account
+			users.push({email: 'admin@codelearn.com', pass: 'Admin@123', role: 'admin'});
+			localStorage.setItem('users', JSON.stringify(users));
+			console.log('Default admin account created: admin@codelearn.com / Admin@123');
+		}
+	} catch(e) {
+		console.error('Error initializing admin account:', e);
+	}
+}
+
+function showAdminLogin(){
+	currentLoginRole = 'admin';
+	document.getElementById('role-selector').style.display = 'none';
+	document.getElementById('login-form').style.display = 'block';
+	document.getElementById('login-title').textContent = '🔐 Admin Login';
+	document.getElementById('login-subtitle').textContent = 'Enter your admin credentials';
+	document.getElementById('login-btn').textContent = 'Admin Login';
+	document.getElementById('divider-login').style.display = 'none';
+	document.getElementById('signup-switch').style.display = 'none';
+	document.getElementById('liEmail').focus();
+}
+
+function showStudentLogin(){
+	currentLoginRole = 'student';
+	document.getElementById('role-selector').style.display = 'none';
+	document.getElementById('login-form').style.display = 'block';
+	document.getElementById('login-title').textContent = 'Welcome Back';
+	document.getElementById('login-subtitle').textContent = 'Login to continue learning';
+	document.getElementById('login-btn').textContent = 'Login';
+	document.getElementById('divider-login').style.display = 'block';
+	document.getElementById('signup-switch').style.display = 'block';
+	document.getElementById('liEmail').focus();
+}
+
+function showStudentSignup(){
+	currentLoginRole = 'student';
+	document.getElementById('role-selector').style.display = 'none';
+	document.getElementById('login-form').style.display = 'none';
+	document.querySelectorAll('.auth-signup').forEach(f => f.classList.remove('hidden'));
+	document.getElementById('signup-switch').style.display = 'none';
+	transitionToScreen('auth');
+	document.getElementById('suEmail').focus();
+}
+
+function backToRoleSelector(){
+	document.getElementById('role-selector').style.display = 'block';
+	document.getElementById('login-form').style.display = 'none';
+	document.querySelectorAll('.auth-signup').forEach(f => f.classList.add('hidden'));
+	liEmail.value = '';
+	liPass.value = '';
+	currentLoginRole = 'student';
+}
+
+/* AUTH */
+function signup(){
+	const email = suEmail.value.trim();
+	const pass = suPass.value;
+	const confirm = suConfirm.value;
+	
+	// Validation
+	if(!email){showAlert('Please enter an email', 'error'); return;}
+	if(!email.includes('@')){showAlert('Please enter a valid email', 'error'); return;}
+	if(pass.length < 8){showAlert('Password must be at least 8 characters', 'error'); return;}
+	if(pass !== confirm){showAlert('Passwords do not match', 'error'); return;}
+	
+	let users=JSON.parse(localStorage.getItem('users')||'[]')
+	if(users.find(u=>u.email==email)){showAlert('Email already registered', 'error'); return;}
+	
+	users.push({
+		email: email,
+		pass: pass,
+		role: 'student',
+		status: 'pending',
+		created: new Date().toLocaleString()
+	});
+	localStorage.setItem('users',JSON.stringify(users))
+	showAlert('Registration submitted successfully! Your account is pending admin verification.', 'success')
+	suEmail.value = '';
+	suPass.value = '';
+	suConfirm.value = '';
+	backToRoleSelector();
+}
+
+function login(){
+	let users=JSON.parse(localStorage.getItem('users')||'[]')
+	let u=users.find(x=>x.email==liEmail.value && x.pass==liPass.value)
+	
+	if(!u){
+		showAlert('Invalid email or password', 'error')
+		return
+	}
+	
+if(u.status === 'pending'){
+	showAlert('Your registration is pending admin verification.', 'warning')
+	return
+}
+if(u.status === 'rejected'){
+	showAlert('Your registration was rejected. Please contact admin.', 'error')
+	return
+}
+
+	if(currentLoginRole === 'student' && u.role === 'admin'){
+		showAlert('Admin accounts must login through admin login', 'error')
+		return
+	}
+	
+	localStorage.setItem('currentUser', u.email)
+	localStorage.setItem('userRole', u.role || 'student')
+	
+	if(u.role === 'admin'){
+		window.location.href = 'admin.html'
+	} else {
+		loadApp()
+	}
+}
+
+function loadApp(){
+	// Hide auth screen and show main content
+	const authScreen = document.getElementById('auth');
+	if(authScreen){
+		authScreen.classList.remove('active', 'slide-in-active');
+		authScreen.classList.add('hidden');
+	}
+	
+	// Show header and set up main
+	const header = document.querySelector('header');
+	header.style.display = 'flex';
+	header.classList.add('visible');
+	main.classList.add('show-header');
+	
+	// Transition to dashboard
+	currentScreen = 'auth';
+	transitionToScreen('dashboard');
+	
+	const userElement = document.getElementById('user');
+	if(userElement){
+		userElement.innerText = localStorage.getItem('currentUser') || 'Guest';
+	}
+	refreshProgressDashboard();
+	checkAchievements();
+	updatePaymentStatus();
+}
+
+function logout(){localStorage.removeItem('currentUser');location.reload()}
+
+/* THEME */
+function toggleTheme(){
+	document.body.classList.toggle('light');
+	const isLight = document.body.classList.contains('light');
+	themeBtn.textContent = isLight ? '☀️' : '🌙';
+}
+
+/* CUSTOM ALERT */
+function showAlert(message, type = 'info'){
+	const existing = document.querySelector('.custom-alert');
+	if(existing) existing.remove();
+	
+	const alert = document.createElement('div');
+	alert.className = 'custom-alert';
+	alert.innerHTML = `
+		<div class="alert-overlay" onclick="this.parentElement.remove()"></div>
+		<div class="alert-modal">
+			<div class="alert-content">
+				<div class="alert-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</div>
+				<div class="alert-message">${message.replace(/\\n/g, '<br>')}</div>
+				<button class="alert-close" onclick="this.parentElement.parentElement.parentElement.remove()">OK</button>
+			</div>
+		</div>
+	`;
+	document.body.appendChild(alert);
+	
+	// Auto-remove after 5 seconds for non-error alerts
+	if(type !== 'error'){
+		setTimeout(() => {
+			if(alert.parentElement) alert.remove();
+		}, 5000);
+	}
+}
+
+/* COURSE PRICING & PAYMENT */
+const COURSE_PRICING = {
+	'HTML': 29.99,
+	'CSS': 29.99,
+	'JS': 39.99
+};
+
+function hasCoursePaid(course){
+	const currentUser = localStorage.getItem('currentUser');
+	if(!currentUser) return false;
+	const payments = JSON.parse(localStorage.getItem('coursePayments_' + currentUser) || '{}');
+	return payments[course] === true;
+}
+
+function updatePaymentStatus(){
+	const courses = ['HTML', 'CSS', 'JS'];
+	courses.forEach(course => {
+		const statusEl = document.getElementById(course.toLowerCase() + '-payment-status');
+		if(statusEl){
+			if(hasCoursePaid(course)){
+				statusEl.textContent = '✅ Payment Verified';
+				statusEl.style.color = '#22c55e';
+			} else {
+				statusEl.innerHTML = '⏳ <a href="#" onclick="openPaymentModal(\'' + course + '\'); return false;" style="color:#60a5fa;text-decoration:underline;cursor:pointer">Upload Payment</a>';
+			}
+		}
+	});
+}
+
+function openPaymentModal(course){
+	document.getElementById('paymentCourse').value = course;
+	document.getElementById('paymentAmount').textContent = '$' + COURSE_PRICING[course].toFixed(2);
+	document.getElementById('paymentTitle').textContent = 'Upload Payment Receipt - ' + course;
+	document.getElementById('paymentEmail').value = localStorage.getItem('currentUser') || '';
+	document.getElementById('paymentReference').value = '';
+	document.getElementById('paymentFile').value = '';
+	document.getElementById('fileText').textContent = '📁 Click to select receipt or drag and drop';
+	document.getElementById('payment-modal').classList.add('show');
+}
+
+function closePaymentModal(){
+	document.getElementById('payment-modal').classList.remove('show');
+}
+
+function submitPayment(){
+	const course = document.getElementById('paymentCourse').value;
+	const fileInput = document.getElementById('paymentFile');
+	const file = fileInput.files[0];
+	const email = document.getElementById('paymentEmail').value.trim();
+	const reference = document.getElementById('paymentReference').value.trim();
+	
+	if(!file){
+		showAlert('❌ Please select a file', 'error');
+		return;
+	}
+	
+	if(!email || !reference){
+		showAlert('❌ Please fill in email and payment reference', 'error');
+		return;
+	}
+	
+	const currentUser = localStorage.getItem('currentUser');
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		const pendingPayments = JSON.parse(localStorage.getItem('pendingPayments') || '[]');
+		pendingPayments.push({
+			id: Date.now(),
+			user: currentUser,
+			course: course,
+			amount: COURSE_PRICING[course],
+			email: email,
+			reference: reference,
+			receipt: e.target.result,
+			status: 'pending',
+			date: new Date().toLocaleString()
+		});
+		localStorage.setItem('pendingPayments', JSON.stringify(pendingPayments));
+		showAlert('✅ Payment receipt submitted!\\n\\nYour payment is pending admin verification.', 'success');
+		closePaymentModal();
+		updatePaymentStatus();
+	};
+	reader.readAsDataURL(file);
+}
+
+/* PLAYGROUND */
+function runCode(){
+	let html=htmlCode.value
+	let css="<style>"+cssCode.value+"</style>"
+	output.srcdoc=html+css
+}
+
+/* COURSE */
+function startCourse(course){
+	if(!hasCoursePaid(course)){
+		showAlert('⚠️ Please upload your payment receipt first to access this course.', 'warning');
+		openPaymentModal(course);
+		return;
+	}
+	// Navigate to course resources screen
+	transitionToScreen('course-resources');
+	
+	// Load course content based on course name
+	loadCourseContent(course);
+}
+
+function loadCourseContent(courseName){
+	const titleElement = document.getElementById('course-title');
+	const contentElement = document.getElementById('course-content');
+	
+	// Load lessons from localStorage
+	let allLessons = [];
+	const lessonsRaw = localStorage.getItem('lessons');
+	if(lessonsRaw){
+		const parsedLessons = JSON.parse(lessonsRaw);
+		allLessons = Array.isArray(parsedLessons) ? parsedLessons : Object.values(parsedLessons || {});
+	}
+	const courseLessons = allLessons.filter(l => l.course === courseName);
+	
+	console.log('Loading course:', courseName);
+	console.log('All lessons:', allLessons);
+	console.log('Course lessons:', courseLessons);
+	
+	let title, content;
+	
+	// Build interactive lessons list dynamically
+	const interactiveLessonsHtml = courseLessons.map(l => 
+		`<li><a href="#" onclick="openInteractiveLesson('${l.id}');return false;">${l.title}</a></li>`
+	).join('');
+	
+	// Build exercise buttons dynamically
+	const exerciseButtonsHtml = courseLessons.slice(0, 3).map(l => 
+		`<button onclick="startExercise('${l.id}')" class="exercise-btn">${l.title}</button>`
+	).join('');
+	
+	switch(courseName){
+		case 'HTML':
+			title = 'HTML Basics 📄';
+			content = `
+				<div class="course-resources">
+					<div class="resource-section">
+						<h3>📖 What is HTML?</h3>
+						<p>HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure of a web page using markup.</p>
+					</div>
+					
+					<div class="resource-section">
+						<h3>🎯 Learning Objectives</h3>
+						<ul>
+							<li>Understand HTML document structure</li>
+							<li>Learn basic HTML tags and elements</li>
+							<li>Create semantic web pages</li>
+							<li>Work with forms and links</li>
+						</ul>
+					</div>
+					
+					<div class="resource-section">
+						<h3>📚 Resources</h3>
+						<div class="resource-grid">
+							<div class="resource-card">
+								<h4>📺 Video Tutorials</h4>
+								<p class="card-intro">Short, instructor-led videos to understand HTML fundamentals quickly.</p>
+								<ul>
+									<li><a href="#" onclick="playVideo('html-structure', 'HTML Document Structure')">HTML Document Structure</a></li>
+									<li><a href="#" onclick="playVideo('html-tags', 'Basic HTML Tags')">Basic HTML Tags</a></li>
+									<li><a href="#" onclick="playVideo('html-forms', 'Forms and Inputs')">Forms and Inputs</a></li>
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📝 Interactive Lessons (${courseLessons.length})</h4>
+								<p class="card-intro">Hands-on tasks that let you build projects while reinforcing HTML concepts.</p>
+								<ul>
+									${interactiveLessonsHtml}
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📖 Documentation</h4>
+								<p class="card-intro">Curated docs and cheat sheets for quick reference and deeper learning.</p>
+								<ul>
+									<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">MDN HTML Docs</a></li>
+									<li><a href="https://www.w3schools.com/html/" target="_blank">W3Schools HTML</a></li>
+									<li><a href="#" onclick="showAlert('Cheat Sheet: HTML Tags\\n\\nCommon HTML tags:\\n&lt;h1&gt;-&lt;h6&gt;: Headings\\n&lt;p&gt;: Paragraph\\n&lt;a&gt;: Link\\n&lt;img&gt;: Image\\n&lt;div&gt;: Container\\n&lt;span&gt;: Inline container', 'info')">HTML Tags Cheat Sheet</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="resource-section">
+						<h3>💻 Practice Exercises</h3>
+						<div class="exercise-grid">
+							${exerciseButtonsHtml || '<p style="color:#94a3b8">No lessons available yet</p>'}
+						</div>
+					</div>
+				</div>
+			`;
+			break;
+			
+		case 'CSS':
+			title = 'CSS Styling 🎨';
+			content = `
+				<div class="course-resources">
+					<div class="resource-section">
+						<h3>🎨 What is CSS?</h3>
+						<p>CSS (Cascading Style Sheets) is a style sheet language used for describing the presentation of a document written in HTML.</p>
+					</div>
+					
+					<div class="resource-section">
+						<h3>🎯 Learning Objectives</h3>
+						<ul>
+							<li>Master CSS selectors and properties</li>
+							<li>Learn layout techniques (Flexbox, Grid)</li>
+							<li>Understand responsive design</li>
+							<li>Create beautiful user interfaces</li>
+						</ul>
+					</div>
+					
+					<div class="resource-section">
+						<h3>📚 Resources</h3>
+						<div class="resource-grid">
+							<div class="resource-card">
+								<h4>📺 Video Tutorials</h4>
+								<p class="card-intro">Clear, engaging videos to grow your CSS knowledge fast.</p>
+								<ul>
+									<li><a href="#" onclick="playVideo('css-selectors', 'CSS Selectors')">CSS Selectors</a></li>
+									<li><a href="#" onclick="playVideo('css-flexbox', 'Flexbox Layout')">Flexbox Layout</a></li>
+									<li><a href="#" onclick="playVideo('css-grid', 'CSS Grid')">CSS Grid</a></li>
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📝 Interactive Lessons (${courseLessons.length})</h4>
+								<p class="card-intro">Practice essential styles with interactive exercises that teach by doing.</p>
+								<ul>
+									${interactiveLessonsHtml}
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📖 Documentation</h4>
+								<p class="card-intro">Pro-level references to master styling behavior across browsers.</p>
+								<ul>
+									<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">MDN CSS Docs</a></li>
+									<li><a href="https://www.w3schools.com/css/" target="_blank">W3Schools CSS</a></li>
+									<li><a href="#" onclick="showAlert('Cheat Sheet: CSS Properties\\n\\nCommon CSS properties:\\ncolor: Text color\\nbackground: Background styling\\nmargin/padding: Spacing\\nborder: Border styling\\nfont-size: Text size\\ndisplay: Layout type\\nflex/grid: Layout systems', 'info')">CSS Properties Cheat Sheet</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="resource-section">
+						<h3>💻 Practice Exercises</h3>
+						<div class="exercise-grid">
+							${exerciseButtonsHtml || '<p style="color:#94a3b8">No lessons available yet</p>'}
+						</div>
+					</div>
+				</div>
+			`;
+			break;
+			
+		case 'JS':
+			title = 'JavaScript Programming ⚡';
+			content = `
+				<div class="course-resources">
+					<div class="resource-section">
+						<h3>⚡ What is JavaScript?</h3>
+						<p>JavaScript is a programming language that enables interactive web pages and is an essential part of web applications.</p>
+					</div>
+					
+					<div class="resource-section">
+						<h3>🎯 Learning Objectives</h3>
+						<ul>
+							<li>Master JavaScript fundamentals</li>
+							<li>Learn DOM manipulation</li>
+							<li>Understand asynchronous programming</li>
+							<li>Build interactive web applications</li>
+						</ul>
+					</div>
+					
+					<div class="resource-section">
+						<h3>📚 Resources</h3>
+						<div class="resource-grid">
+							<div class="resource-card">
+								<h4>📺 Video Tutorials</h4>
+								<p class="card-intro">In-depth JS videos that cover fundamental logic and interaction patterns.</p>
+								<ul>
+									<li><a href="#" onclick="playVideo('js-variables', 'Variables & Data Types')">Variables & Data Types</a></li>
+									<li><a href="#" onclick="playVideo('js-functions', 'Functions')">Functions</a></li>
+									<li><a href="#" onclick="playVideo('js-dom', 'DOM Manipulation')">DOM Manipulation</a></li>
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📝 Interactive Lessons (${courseLessons.length})</h4>
+								<p class="card-intro">Interactive code playbooks to improve your JavaScript fluency.</p>
+								<ul>
+									${interactiveLessonsHtml}
+								</ul>
+							</div>
+							<div class="resource-card">
+								<h4>📖 Documentation</h4>
+								<p class="card-intro">Essential documentation cheats for performance and advanced techniques.</p>
+								<ul>
+									<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">MDN JavaScript Docs</a></li>
+									<li><a href="https://www.w3schools.com/js/" target="_blank">W3Schools JavaScript</a></li>
+									<li><a href="#" onclick="showAlert('Cheat Sheet: JS Methods\\n\\nCommon JavaScript methods:\\ngetElementById(): Get element by ID\\nquerySelector(): Select element\\naddEventListener(): Add event handler\\nsetTimeout(): Delay execution\\nJSON.parse(): Parse JSON\\nArray.map(): Transform array\\nconsole.log(): Debug output', 'info')">JavaScript Methods Cheat Sheet</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="resource-section">
+						<h3>💻 Practice Exercises</h3>
+						<div class="exercise-grid">
+							${exerciseButtonsHtml || '<p style="color:#94a3b8">No lessons available yet</p>'}
+						</div>
+					</div>
+				</div>
+			`;
+			break;
+			
+		default:
+			title = 'Course Resources 📚';
+			content = '<p>Course content not found.</p>';
+	}
+	
+	titleElement.textContent = title;
+	contentElement.innerHTML = content;
+}
+
+function startExercise(exerciseId){
+	showAlert('Starting exercise: ' + exerciseId + '\\n\\nThis would open an interactive coding exercise!', 'info');
+}
+
+// Accessibility: close sidebar with Escape key
+document.addEventListener('keydown',e=>{
+	if(e.key==='Escape' && sidebar.classList.contains('active')) closeSidebar();
+});
+
+// Make sidebar links activate on Enter/Space when focused
+sidebar.addEventListener('keydown', e=>{
+	const t = e.target;
+	if((e.key==='Enter' || e.key===' ') && t && t.tagName==='A'){
+		e.preventDefault(); t.click();
+	}
+});
+
+// Override startExercise to reuse openInteractiveLesson behavior
+function startExercise(exerciseId){
+	const map={
+		'html-basic':'html-elements',
+		'html-forms':'html-forms',
+		'html-semantic':'semantic-html',
+		'html-links':'html-links',
+		'html-images':'html-images',
+		'html-tables':'html-tables',
+		'html-lists':'html-lists',
+		'html-meta':'html-meta',
+		'html-doctype':'html-doctype',
+		'html-comments':'html-comments',
+		'css-layout':'css-properties',
+		'css-responsive':'responsive-design',
+		'css-animations':'css-animations',
+		'css-selectors':'css-selectors',
+		'css-box-model':'css-box-model',
+		'css-flexbox':'css-flexbox',
+		'css-grid':'css-grid',
+		'css-colors':'css-colors',
+		'css-fonts':'css-fonts',
+		'css-media-queries':'css-media-queries',
+		'js-basics':'js-basics',
+		'js-dom':'event-handling',
+		'js-events':'async-js',
+		'js-variables':'js-variables',
+		'js-functions':'js-functions',
+		'js-objects':'js-objects',
+		'js-arrays':'js-arrays',
+		'js-loops':'js-loops',
+		'js-conditionals':'js-conditionals',
+		'js-dom-manipulation':'js-dom-manipulation'
+	};
+
+	const targetLesson = map[exerciseId];
+	if(targetLesson){
+		openInteractiveLesson(targetLesson);
+	} else {
+		showAlert('Starting exercise: ' + exerciseId + '\n\nThis would open an interactive coding exercise!', 'info');
+	}
+}
+
+// Close sidebar when clicking anywhere in the main content area (but not the menu button or sidebar itself)
+main.addEventListener('click', e=>{
+  if(!sidebar.classList.contains('active')) return;
+  if(e.target.closest('.menu-btn') || e.target.closest('#sidebar')) return;
+  closeSidebar();
+});
+
+window.onload=()=>{
+	try {
+		initializeDefaultLessons();
+		initializeAdminAccount();
+	} catch(e) {
+		console.error('Error initializing app:', e);
+	}
+	
+	// Check URL hash for initial screen
+	const hash = window.location.hash.substring(1); // remove #
+	const validScreens = ['auth','dashboard','courses','course-resources','progress','achievements','settings','playground'];
+	let initialScreen = 'auth';
+	if(validScreens.includes(hash)){
+		initialScreen = hash;
+	}
+	currentScreen = initialScreen;
+	
+	try {
+		// Reset all screens visibility
+		validScreens.forEach(screenId => {
+			const screen = document.getElementById(screenId);
+			if(screen) {
+				screen.classList.remove('active', 'slide-in-active');
+				screen.classList.add('screen');
+			}
+		});
+		
+		if(localStorage.getItem('currentUser') && initialScreen === 'auth'){
+			loadApp();
+		}else{
+			const authScreen = document.getElementById('auth');
+			if(authScreen) {
+				authScreen.classList.add('active', 'slide-in-active');
+			}
+			// Show role selector by default
+			const roleSelector = document.getElementById('role-selector');
+			const loginForm = document.getElementById('login-form');
+			const authSignup = document.querySelector('.auth-signup');
+			if(roleSelector) roleSelector.style.display = 'block';
+			if(loginForm) loginForm.style.display = 'none';
+			if(authSignup) authSignup.classList.add('hidden');
+		}
+	} catch(e) {
+		console.error('Error during app initialization:', e);
+		showAlert('Error loading app: ' + e.message, 'error');
+	}
+	
+	// Set initial theme icon
+	try {
+		const isLight = document.body.classList.contains('light');
+		themeBtn.textContent = isLight ? '☀️' : '🌙';
+	} catch(e) {
+		console.error('Error setting theme:', e);
+	}
+}
+
+// Listen for hash changes (back/forward navigation)
+window.addEventListener('hashchange', function(){
+	try {
+		const hash = window.location.hash.substring(1);
+		const validScreens = ['auth','dashboard','courses','course-resources','progress','achievements','settings','playground'];
+		if(validScreens.includes(hash)){
+			transitionToScreen(hash);
+		}
+	} catch(e) {
+		console.error('Error handling hash change:', e);
+	}
+});
+
+// Video player functions
+function playVideo(videoId, title) {
+	console.log('Playing video:', videoId, title);
+	const modal = document.getElementById('video-modal');
+	const titleElement = document.getElementById('video-title');
+	const container = document.getElementById('video-container');
+	
+	if (!modal) {
+		console.error('Video modal not found!');
+		return;
+	}
+	
+	titleElement.textContent = title;
+	
+	// Video URLs (using reliable coding tutorial videos)
+	const videoUrls = {
+		'html-structure': 'https://www.youtube.com/embed/916GWv2Qs08', // HTML Crash Course
+		'html-tags': 'https://www.youtube.com/embed/UB1O30fR-EE', // HTML Tutorial
+		'html-forms': 'https://www.youtube.com/embed/yZ0Jgn8Tq2E', // HTML Forms
+		'css-selectors': 'https://www.youtube.com/embed/l1mER1bV0N0', // CSS Tutorial
+		'css-flexbox': 'https://www.youtube.com/embed/K74l26pE4YA', // Flexbox Tutorial
+		'css-grid': 'https://www.youtube.com/embed/0-DY9XgtJnU', // CSS Grid Tutorial
+		'js-variables': 'https://www.youtube.com/embed/W6NZfCO5SIk', // JavaScript Basics
+		'js-functions': 'https://www.youtube.com/embed/N8ap4k_1QEQ', // JS Functions
+		'js-dom': 'https://www.youtube.com/embed/y17RuWkWdn8' // DOM Manipulation
+	};
+	
+	const videoUrl = videoUrls[videoId];
+	if (videoUrl) {
+		container.innerHTML = `
+			<iframe width="100%" height="100%" 
+				src="${videoUrl}" 
+				frameborder="0" 
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				allowfullscreen 
+				style="border-radius:8px;opacity:0.5"
+				onload="this.style.opacity='1'">
+			</iframe>
+			<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#94a3b8;font-size:14px">Loading video...</div>
+		`;
+		// Hide loading text after iframe loads
+		setTimeout(() => {
+			const loadingText = container.querySelector('div');
+			if (loadingText) loadingText.style.display = 'none';
+		}, 2000);
+	} else {
+		container.innerHTML = '<p style="color:#94a3b8;text-align:center">Video not available yet. Coming soon!</p>';
+	}
+	
+	modal.style.display = 'flex';
+	document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+	const modal = document.getElementById('video-modal');
+	const container = document.getElementById('video-container');
+	
+	modal.style.display = 'none';
+	container.innerHTML = '<p style="color:#94a3b8;text-align:center">Loading video...</p>';
+	document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.getElementById('video-modal').addEventListener('click', function(e) {
+	if (e.target === this) {
+		closeVideoModal();
+	}
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+	if (e.key === 'Escape' && document.getElementById('video-modal').style.display === 'flex') {
+		closeVideoModal();
+	}
+});
+
+// Settings Functions
+function toggleSetting(element, settingName) {
+	element.classList.toggle('active');
+	localStorage.setItem(settingName, element.classList.contains('active'));
+	console.log(settingName + ' setting toggled');
+}
+
+function toggleSettingTheme(element) {
+	element.classList.toggle('active');
+	toggleTheme();
+}
+
+/* PROGRESS TRACKING */
+const DEFAULT_LESSONS = {
+	'html-elements':{id:'html-elements', course:'HTML', title:'HTML Elements Practice',description:'Build a sample layout using headings, sections, lists, and images.',steps:['Create a semantic HTML structure','Add headings, paragraphs, and lists','Embed an image with alt text','Include links and anchors']},
+	'semantic-html':{id:'semantic-html', course:'HTML', title:'Semantic HTML',description:'Use HTML5 semantic tags for better structure and accessibility.',steps:['Use header/nav/main/footer tags','Add section/article tags','Use meaningful headings','Add ARIA labels where needed']},
+	'html-forms':{id:'html-forms', course:'HTML', title:'HTML Forms',description:'Create a contact form with labels and validation hints.',steps:['Add form and fieldset','Add label and input elements','Use required/type controls','Add submit button']},
+	'html-links':{id:'html-links', course:'HTML', title:'HTML Links and Navigation',description:'Create hyperlinks and navigation structures.',steps:['Use anchor tags for links','Add target attributes','Create navigation menus','Link to sections within page']},
+	'html-images':{id:'html-images', course:'HTML', title:'HTML Images and Media',description:'Embed images, audio, and video in web pages.',steps:['Use img tag with src and alt','Add responsive images','Include audio/video elements','Optimize media for web']},
+	'html-tables':{id:'html-tables', course:'HTML', title:'HTML Tables',description:'Structure data using tables.',steps:['Create table structure with thead/tbody','Add table headers','Use rowspan/colspan','Style tables with CSS']},
+	'html-lists':{id:'html-lists', course:'HTML', title:'HTML Lists',description:'Organize content with ordered and unordered lists.',steps:['Use ul, ol, and li tags','Create nested lists','Add list styles','Use dl for definitions']},
+	'html-meta':{id:'html-meta', course:'HTML', title:'HTML Meta Tags',description:'Add metadata for SEO and browser behavior.',steps:['Add title and meta description','Include charset and viewport','Use meta for social sharing','Add favicon']},
+	'html-doctype':{id:'html-doctype', course:'HTML', title:'HTML Document Structure',description:'Understand DOCTYPE and document structure.',steps:['Declare HTML5 DOCTYPE','Structure with html/head/body','Add lang attribute','Validate HTML']},
+	'html-comments':{id:'html-comments', course:'HTML', title:'HTML Comments',description:'Add comments for code documentation.',steps:['Use <!-- --> for comments','Comment out code sections','Add developer notes','Keep code maintainable']},
+	'css-properties':{id:'css-properties', course:'CSS', title:'CSS Properties',description:'Style card elements with colors, layout, and typography.',steps:['Set color and typography','Add spacing and borders','Apply hover styles','Add transitions']},
+	'responsive-design':{id:'responsive-design', course:'CSS', title:'Responsive Design',description:'Make layouts adapt with media queries.',steps:['Use mobile-first styles','Add breakpoints','Adjust grid/flex displays','Test on different screen sizes']},
+	'css-animations':{id:'css-animations', course:'CSS', title:'CSS Animations',description:'Animate elements using keyframes and transitions.',steps:['Create @keyframes','Animate hover states','Use transform and opacity','Tune duration']},
+	'css-selectors':{id:'css-selectors', course:'CSS', title:'CSS Selectors',description:'Target elements with various selectors.',steps:['Use class and ID selectors','Apply pseudo-classes','Use attribute selectors','Combine selectors']},
+	'css-box-model':{id:'css-box-model', course:'CSS', title:'CSS Box Model',description:'Understand margins, borders, padding, and content.',steps:['Set width and height','Add padding and margins','Use border properties','Control box-sizing']},
+	'css-flexbox':{id:'css-flexbox', course:'CSS', title:'CSS Flexbox',description:'Create flexible layouts with flexbox.',steps:['Set display: flex','Use flex-direction','Apply justify-content','Add flex-wrap']},
+	'css-grid':{id:'css-grid', course:'CSS', title:'CSS Grid',description:'Build complex layouts with CSS Grid.',steps:['Define grid container','Use grid-template','Position grid items','Create responsive grids']},
+	'css-colors':{id:'css-colors', course:'CSS', title:'CSS Colors and Backgrounds',description:'Apply colors and background styles.',steps:['Use color names and hex','Apply RGB/RGBA','Add gradients','Set background images']},
+	'css-fonts':{id:'css-fonts', course:'CSS', title:'CSS Fonts and Text',description:'Style text with fonts and typography.',steps:['Set font-family','Adjust font-size','Use font-weight','Add text-decoration']},
+	'css-media-queries':{id:'css-media-queries', course:'CSS', title:'CSS Media Queries',description:'Create responsive designs with media queries.',steps:['Use @media rules','Target screen sizes','Apply orientation','Test breakpoints']},
+	'js-basics':{id:'js-basics', course:'JS', title:'JavaScript Basics',description:'Add interactivity using DOM selection and event listeners.',steps:['Select elements with querySelector','Bind event handlers','Update DOM values','Debug with console']},
+	'event-handling':{id:'event-handling', course:'JS', title:'Event Handling',description:'Handle clicks, keyboard and form events.',steps:['Attach click listeners','Manage keyboard events','Prevent default actions','Use delegation']},
+	'async-js':{id:'async-js', course:'JS', title:'Async JavaScript',description:'Fetch and render remote data asynchronously.',steps:['Use fetch API','Parse JSON','Handle errors','Update the UI']},
+	'js-variables':{id:'js-variables', course:'JS', title:'JavaScript Variables',description:'Declare and use variables in JavaScript.',steps:['Use var, let, const','Understand scope','Assign values','Use different data types']},
+	'js-functions':{id:'js-functions', course:'JS', title:'JavaScript Functions',description:'Create and call functions.',steps:['Define function syntax','Pass parameters','Return values','Use arrow functions']},
+	'js-objects':{id:'js-objects', course:'JS', title:'JavaScript Objects',description:'Work with objects and properties.',steps:['Create object literals','Access properties','Use methods','Iterate over objects']},
+	'js-arrays':{id:'js-arrays', course:'JS', title:'JavaScript Arrays',description:'Manipulate arrays and data collections.',steps:['Create arrays','Access elements','Use array methods','Iterate with loops']},
+	'js-loops':{id:'js-loops', course:'JS', title:'JavaScript Loops',description:'Control flow with loops.',steps:['Use for loops','Apply while loops','Iterate arrays','Use for...of']},
+	'js-conditionals':{id:'js-conditionals', course:'JS', title:'JavaScript Conditionals',description:'Make decisions with if/else.',steps:['Use if statements','Add else clauses','Apply logical operators','Use switch statements']},
+	'js-dom-manipulation':{id:'js-dom-manipulation', course:'JS', title:'DOM Manipulation',description:'Modify the DOM dynamically.',steps:['Select elements','Change content','Add/remove classes','Create new elements']}
+};
+
+var COURSE_LESSON_MAP;
+try {
+	const parsed = JSON.parse(localStorage.getItem('courseLessonMap') || '{"html-elements":"HTML","semantic-html":"HTML","html-forms":"HTML","html-links":"HTML","html-images":"HTML","html-tables":"HTML","html-lists":"HTML","html-meta":"HTML","html-doctype":"HTML","html-comments":"HTML","css-properties":"CSS","responsive-design":"CSS","css-animations":"CSS","css-selectors":"CSS","css-box-model":"CSS","css-flexbox":"CSS","css-grid":"CSS","css-colors":"CSS","css-fonts":"CSS","css-media-queries":"CSS","js-basics":"JS","event-handling":"JS","async-js":"JS","js-variables":"JS","js-functions":"JS","js-objects":"JS","js-arrays":"JS","js-loops":"JS","js-conditionals":"JS","js-dom-manipulation":"JS"}');
+	COURSE_LESSON_MAP = (typeof parsed === 'object' && parsed !== null) ? parsed : {"html-elements":"HTML","semantic-html":"HTML","html-forms":"HTML","html-links":"HTML","html-images":"HTML","html-tables":"HTML","html-lists":"HTML","html-meta":"HTML","html-doctype":"HTML","html-comments":"HTML","css-properties":"CSS","responsive-design":"CSS","css-animations":"CSS","css-selectors":"CSS","css-box-model":"CSS","css-flexbox":"CSS","css-grid":"CSS","css-colors":"CSS","css-fonts":"CSS","css-media-queries":"CSS","js-basics":"JS","event-handling":"JS","async-js":"JS","js-variables":"JS","js-functions":"JS","js-objects":"JS","js-arrays":"JS","js-loops":"JS","js-conditionals":"JS","js-dom-manipulation":"JS"};
+} catch(e) {
+	COURSE_LESSON_MAP = {"html-elements":"HTML","semantic-html":"HTML","html-forms":"HTML","html-links":"HTML","html-images":"HTML","html-tables":"HTML","html-lists":"HTML","html-meta":"HTML","html-doctype":"HTML","html-comments":"HTML","css-properties":"CSS","responsive-design":"CSS","css-animations":"CSS","css-selectors":"CSS","css-box-model":"CSS","css-flexbox":"CSS","css-grid":"CSS","css-colors":"CSS","css-fonts":"CSS","css-media-queries":"CSS","js-basics":"JS","event-handling":"JS","async-js":"JS","js-variables":"JS","js-functions":"JS","js-objects":"JS","js-arrays":"JS","js-loops":"JS","js-conditionals":"JS","js-dom-manipulation":"JS"};
+}
+
+var COURSE_TOTAL_LESSONS;
+try {
+	const parsed = JSON.parse(localStorage.getItem('courseTotals') || '{"HTML":10,"CSS":10,"JS":10}');
+	COURSE_TOTAL_LESSONS = (typeof parsed === 'object' && parsed !== null) ? parsed : {"HTML":10,"CSS":10,"JS":10};
+} catch(e) {
+	COURSE_TOTAL_LESSONS = {"HTML":10,"CSS":10,"JS":10};
+}
+
+function initializeDefaultLessons(){
+	let existingLessons = [];
+	const existingRaw = localStorage.getItem('lessons');
+	if(existingRaw){
+		const parsed = JSON.parse(existingRaw);
+		existingLessons = Array.isArray(parsed) ? parsed : Object.values(parsed || {});
+	}
+	console.log('Existing lessons:', existingLessons);
+	if(existingLessons.length === 0){
+		console.log('Initializing default lessons...');
+		localStorage.setItem('lessons', JSON.stringify(Object.values(DEFAULT_LESSONS)));
+		const courseLessonMap = {};
+		Object.entries(DEFAULT_LESSONS).forEach(([key, lesson]) => {
+			courseLessonMap[key] = lesson.course;
+		});
+		localStorage.setItem('courseLessonMap', JSON.stringify(courseLessonMap));
+		console.log('Default lessons initialized');
+	} else {
+		console.log('Lessons already exist, skipping initialization');
+	}
+}
+
+function getProgressState(){
+	const currentUser = localStorage.getItem('currentUser');
+	const key = 'learningProgress_' + currentUser;
+	const state = JSON.parse(localStorage.getItem(key) || '{}');
+	if(!state.completedLessons) state.completedLessons = [];
+	if(!state.totalHours) state.totalHours = 0;
+	if(!state.learningStreak) state.learningStreak = 0;
+	if(!state.exercisesCompleted) state.exercisesCompleted = 0;
+	return state;
+}
+
+function saveProgressState(state){
+	const currentUser = localStorage.getItem('currentUser');
+	const key = 'learningProgress_' + currentUser;
+	localStorage.setItem(key, JSON.stringify(state));
+	refreshProgressDashboard();
+}
+
+function computeCourseProgress(course){
+	const state = getProgressState();
+	const lessons = state.completedLessons.filter(l => COURSE_LESSON_MAP[l]===course).length;
+	const total = COURSE_TOTAL_LESSONS[course] || 10;
+	return Math.min(100, Math.round((lessons/total)*100));
+}
+
+function formatHours(hours){
+	return Number(hours).toFixed(1) + ' hrs';
+}
+
+function refreshProgressDashboard(){
+	const state = getProgressState();
+	const totalLessons = Object.values(COURSE_TOTAL_LESSONS).reduce((a,b)=>a+b,0);
+	const completedLessons = state.completedLessons.length;
+	const completionRate = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+	if(document.getElementById('statTotalCourses')){
+		document.getElementById('statTotalCourses').textContent = Object.keys(COURSE_TOTAL_LESSONS).length;
+		document.getElementById('statCoursesCompleted').textContent = Object.keys(COURSE_TOTAL_LESSONS).filter(c=>computeCourseProgress(c) >= 100).length;
+		document.getElementById('statLearningStreak').textContent = state.learningStreak + ' days';
+		document.getElementById('statTotalHours').textContent = formatHours(state.totalHours);
+		document.getElementById('statExercisesCompleted').textContent = state.exercisesCompleted;
+		document.getElementById('statCurrentGoal').textContent = '50 hrs/month';
+		document.getElementById('statTotalLessons').textContent = totalLessons;
+		document.getElementById('statLessonsCompleted').textContent = completedLessons;
+		document.getElementById('statCompletionRate').textContent = completionRate + '%';
+	}
+	const htmlPercent = computeCourseProgress('HTML');
+	curryProgressBar('htmlProgress', htmlPercent, state.completedLessons.filter(l => COURSE_LESSON_MAP[l]==='HTML').length, COURSE_TOTAL_LESSONS.HTML);
+	const cssPercent = computeCourseProgress('CSS');
+	curryProgressBar('cssProgress', cssPercent, state.completedLessons.filter(l => COURSE_LESSON_MAP[l]==='CSS').length, COURSE_TOTAL_LESSONS.CSS);
+	const jsPercent = computeCourseProgress('JS');
+	curryProgressBar('jsProgress', jsPercent, state.completedLessons.filter(l => COURSE_LESSON_MAP[l]==='JS').length, COURSE_TOTAL_LESSONS.JS);
+	checkAchievements();
+}
+
+function curryProgressBar(id, percent, completed, total){
+	const bar = document.getElementById(id);
+	if(!bar) return;
+	bar.style.width = percent + '%';
+	bar.textContent = percent + '%';
+	const card = bar.closest('.progress-card');
+	if(card){
+		let status = card.querySelector('.progress-status');
+		if(!status){
+			status = document.createElement('p');
+			status.className='progress-status';
+			status.style.cssText='font-size:0.9rem;color:#94a3b8;margin-top:10px';
+			card.appendChild(status);
+		}
+		status.textContent = '✓ ' + completed + ' of ' + total + ' lessons completed';
+	}
+}
+
+function checkAchievements(){
+	const state = getProgressState();
+	const htmlProgress = computeCourseProgress('HTML');
+	const cssProgress = computeCourseProgress('CSS');
+	const jsProgress = computeCourseProgress('JS');
+	const totalCoursesCompleted = Object.keys(COURSE_TOTAL_LESSONS).filter(c=>computeCourseProgress(c) >= 100).length;
+	
+	// Define achievements
+	const achievements = [
+		{id: 'getting-started', name: 'Getting Started', icon: '🚀', desc: 'Complete first lesson', criteria: state.completedLessons.length >= 1},
+		{id: 'course-master', name: 'Course Master', icon: '📚', desc: 'Complete 1 full course', criteria: totalCoursesCompleted >= 1},
+		{id: 'speed-coder', name: 'Speed Coder', icon: '⚡', desc: 'Complete 5 exercises', criteria: state.exercisesCompleted >= 5},
+		{id: '7-day-streak', name: '7 Day Streak', icon: '🔥', desc: 'Learn 7 days in a row', criteria: state.learningStreak >= 7},
+		{id: 'pro-developer', name: 'Pro Developer', icon: '💎', desc: 'Complete all 3 courses', criteria: totalCoursesCompleted >= 3},
+		{id: 'perfect-streak', name: 'Perfect Streak', icon: '⭐', desc: '30 day learning streak', criteria: state.learningStreak >= 30},
+		{id: 'exercise-expert', name: 'Exercise Expert', icon: '🧠', desc: 'Complete 25 exercises', criteria: state.exercisesCompleted >= 25},
+		{id: 'legend', name: 'Legend', icon: '👑', desc: '100+ hours of learning', criteria: state.totalHours >= 100},
+		{id: 'certification-master', name: 'Certification Master', icon: '🎓', desc: 'Pass all course exams', criteria: totalCoursesCompleted >= 3}, // Assuming exams tied to completion
+		{id: 'rainbow-coder', name: 'Rainbow Coder', icon: '🌈', desc: 'Unlock all badges', criteria: false} // Special case
+	];
+	
+	// Get unlocked achievements
+	const unlocked = achievements.filter(a => a.criteria);
+	const locked = achievements.filter(a => !a.criteria);
+	
+	// Update unlocked section
+	const unlockedContainer = document.querySelector('#achievements .achievement-section:nth-child(2) .badge-grid');
+	if(unlockedContainer){
+		unlockedContainer.innerHTML = unlocked.map(a => `
+			<div class="badge">
+				<div class="badge-icon">${a.icon}</div>
+				<div class="badge-title">${a.name}</div>
+				<div class="badge-desc">${a.desc}</div>
+				<p style="font-size:0.7rem;color:#22c55e;margin-top:10px">✓ Unlocked</p>
+			</div>
+		`).join('');
+	}
+	
+	// Update locked section
+	const lockedContainer = document.querySelector('#achievements .achievement-section:nth-child(3) .badge-grid');
+	if(lockedContainer){
+		lockedContainer.innerHTML = locked.map(a => {
+			let progress = '';
+			if(a.id === 'pro-developer') progress = `Progress: ${totalCoursesCompleted}/3`;
+			else if(a.id === 'perfect-streak') progress = `Progress: ${state.learningStreak}/30 days`;
+			else if(a.id === 'exercise-expert') progress = `Progress: ${state.exercisesCompleted}/25`;
+			else if(a.id === 'legend') progress = `Progress: ${formatHours(state.totalHours)}/100 hours`;
+			else if(a.id === 'certification-master') progress = `Progress: ${totalCoursesCompleted}/3 exams`;
+			else if(a.id === 'rainbow-coder') progress = 'Ultimate Challenge!';
+			return `
+				<div class="badge locked">
+					<div class="badge-icon">${a.icon}</div>
+					<div class="badge-title">${a.name}</div>
+					<div class="badge-criteria">${a.desc}</div>
+					<p style="font-size:0.75rem;color:#94a3b8;margin-top:10px">${progress}</p>
+				</div>
+			`;
+		}).join('');
+	}
+	
+	// Update achievement count
+	const countEl = document.querySelector('#achievements div[style*="rgba(96,165,250"] strong');
+	if(countEl) countEl.textContent = unlocked.length;
+}
+
+function markLessonComplete(lessonKey){
+	const state = getProgressState();
+	if(!state.completedLessons.includes(lessonKey)){
+		state.completedLessons.push(lessonKey);
+		state.totalHours += 1.0;
+		state.learningStreak = Math.min(state.learningStreak + 1, 365);
+		state.exercisesCompleted += 1;
+		saveProgressState(state);
+		showAlert('✅ Lesson completed! Progress updated.', 'success');
+	}
+	refreshProgressDashboard();
+	checkAchievements();
+}
+
+function openInteractiveLesson(lessonKey){
+	const defaultLessons = {
+		'html-elements':{title:'HTML Elements Practice',description:'Build a sample layout using headings, sections, lists, and images.',steps:['Create a semantic HTML structure','Add headings, paragraphs, and lists','Embed an image with alt text','Include links and anchors']},
+		'semantic-html':{title:'Semantic HTML',description:'Use HTML5 semantic tags for better structure and accessibility.',steps:['Use header/nav/main/footer tags','Add section/article tags','Use meaningful headings','Add ARIA labels where needed']},
+		'html-forms':{title:'HTML Forms',description:'Create a contact form with labels and validation hints.',steps:['Add form and fieldset','Add label and input elements','Use required/type controls','Add submit button']},
+		'html-links':{title:'HTML Links and Navigation',description:'Create hyperlinks and navigation structures.',steps:['Use anchor tags for links','Add target attributes','Create navigation menus','Link to sections within page']},
+		'html-images':{title:'HTML Images and Media',description:'Embed images, audio, and video in web pages.',steps:['Use img tag with src and alt','Add responsive images','Include audio/video elements','Optimize media for web']},
+		'html-tables':{title:'HTML Tables',description:'Structure data using tables.',steps:['Create table structure with thead/tbody','Add table headers','Use rowspan/colspan','Style tables with CSS']},
+		'html-lists':{title:'HTML Lists',description:'Organize content with ordered and unordered lists.',steps:['Use ul, ol, and li tags','Create nested lists','Add list styles','Use dl for definitions']},
+		'html-meta':{title:'HTML Meta Tags',description:'Add metadata for SEO and browser behavior.',steps:['Add title and meta description','Include charset and viewport','Use meta for social sharing','Add favicon']},
+		'html-doctype':{title:'HTML Document Structure',description:'Understand DOCTYPE and document structure.',steps:['Declare HTML5 DOCTYPE','Structure with html/head/body','Add lang attribute','Validate HTML']},
+		'html-comments':{title:'HTML Comments',description:'Add comments for code documentation.',steps:['Use <!-- --> for comments','Comment out code sections','Add developer notes','Keep code maintainable']},
+		'css-properties':{title:'CSS Properties',description:'Style card elements with colors, layout, and typography.',steps:['Set color and typography','Add spacing and borders','Apply hover styles','Add transitions']},
+		'responsive-design':{title:'Responsive Design',description:'Make layouts adapt with media queries.',steps:['Use mobile-first styles','Add breakpoints','Adjust grid/flex displays','Test on different screen sizes']},
+		'css-animations':{title:'CSS Animations',description:'Animate elements using keyframes and transitions.',steps:['Create @keyframes','Animate hover states','Use transform and opacity','Tune duration']},
+		'css-selectors':{title:'CSS Selectors',description:'Target elements with various selectors.',steps:['Use class and ID selectors','Apply pseudo-classes','Use attribute selectors','Combine selectors']},
+		'css-box-model':{title:'CSS Box Model',description:'Understand margins, borders, padding, and content.',steps:['Set width and height','Add padding and margins','Use border properties','Control box-sizing']},
+		'css-flexbox':{title:'CSS Flexbox',description:'Create flexible layouts with flexbox.',steps:['Set display: flex','Use flex-direction','Apply justify-content','Add flex-wrap']},
+		'css-grid':{title:'CSS Grid',description:'Build complex layouts with CSS Grid.',steps:['Define grid container','Use grid-template','Position grid items','Create responsive grids']},
+		'css-colors':{title:'CSS Colors and Backgrounds',description:'Apply colors and background styles.',steps:['Use color names and hex','Apply RGB/RGBA','Add gradients','Set background images']},
+		'css-fonts':{title:'CSS Fonts and Text',description:'Style text with fonts and typography.',steps:['Set font-family','Adjust font-size','Use font-weight','Add text-decoration']},
+		'css-media-queries':{title:'CSS Media Queries',description:'Create responsive designs with media queries.',steps:['Use @media rules','Target screen sizes','Apply orientation','Test breakpoints']},
+		'js-basics':{title:'JavaScript Basics',description:'Add interactivity using DOM selection and event listeners.',steps:['Select elements with querySelector','Bind event handlers','Update DOM values','Debug with console']},
+		'event-handling':{title:'Event Handling',description:'Handle clicks, keyboard and form events.',steps:['Attach click listeners','Manage keyboard events','Prevent default actions','Use delegation']},
+		'async-js':{title:'Async JavaScript',description:'Fetch and render remote data asynchronously.',steps:['Use fetch API','Parse JSON','Handle errors','Update the UI']},
+		'js-variables':{title:'JavaScript Variables',description:'Declare and use variables in JavaScript.',steps:['Use var, let, const','Understand scope','Assign values','Use different data types']},
+		'js-functions':{title:'JavaScript Functions',description:'Create and call functions.',steps:['Define function syntax','Pass parameters','Return values','Use arrow functions']},
+		'js-objects':{title:'JavaScript Objects',description:'Work with objects and properties.',steps:['Create object literals','Access properties','Use methods','Iterate over objects']},
+		'js-arrays':{title:'JavaScript Arrays',description:'Manipulate arrays and data collections.',steps:['Create arrays','Access elements','Use array methods','Iterate with loops']},
+		'js-loops':{title:'JavaScript Loops',description:'Control flow with loops.',steps:['Use for loops','Apply while loops','Iterate arrays','Use for...of']},
+		'js-conditionals':{title:'JavaScript Conditionals',description:'Make decisions with if/else.',steps:['Use if statements','Add else clauses','Apply logical operators','Use switch statements']},
+		'js-dom-manipulation':{title:'DOM Manipulation',description:'Modify the DOM dynamically.',steps:['Select elements','Change content','Add/remove classes','Create new elements']}
+	};
+	
+	// Load custom lessons from admin or use defaults
+	const customLessons = JSON.parse(localStorage.getItem('lessons') || '[]');
+	const customLessonsMap = {};
+	customLessons.forEach(l => { customLessonsMap[l.id] = l; });
+	
+	// Merge custom with defaults
+	const lessons = {...defaultLessons, ...customLessonsMap};
+	const lesson = lessons[lessonKey];
+	if(!lesson){showAlert('Lesson not found: ' + lessonKey, 'error'); return;}
+	const content = document.getElementById('course-content');
+	if(!content){showAlert('Course content area not found.', 'error'); return;}
+	const existing = document.getElementById('interactive-lesson-panel');
+	if(existing) existing.remove();
+	const panel = document.createElement('div');
+	panel.id = 'interactive-lesson-panel';
+	panel.className = 'interactive-lesson-panel';
+	panel.innerHTML = '<h3>🧩 ' + lesson.title + '</h3>' +
+		'<p>' + lesson.description + '</p>' +
+		'<ol>' + (lesson.steps || []).map(function(step){return '<li>' + step + '</li>';}).join('') + '</ol>' +
+		'<button class="form-btn" style="margin-top:12px;" onclick="markLessonComplete(\'' + lessonKey + '\')">Mark as Completed</button>' +
+		'<button class="form-btn" style="margin-top:12px;margin-left:10px;background:#64748b;" onclick="document.getElementById(\'interactive-lesson-panel\').remove();">Close</button>';
+	content.appendChild(panel);
+	panel.scrollIntoView({behavior:'smooth',block:'start'});
+	refreshProgressDashboard();
+}
+
+function downloadProgress() {
+	const state = getProgressState();
+	const userData = {
+		user: localStorage.getItem('currentUser'),
+		learningProgress: state,
+		courseProgress: {
+			HTML: computeCourseProgress('HTML'),
+			CSS: computeCourseProgress('CSS'),
+			JS: computeCourseProgress('JS')
+		},
+		downloadDate: new Date().toISOString()
+	};
+	const dataStr = JSON.stringify(userData, null, 2);
+	const dataBlob = new Blob([dataStr], {type: 'application/json'});
+	const url = URL.createObjectURL(dataBlob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = 'J_Dev_Learning_Progress.json';
+	link.click();
+	showAlert('✅ Your learning progress has been downloaded!', 'success');
+}
+
+function resetProgress() {
+	if(confirm('⚠️ Are you sure you want to reset all your progress? This cannot be undone.')) {
+		localStorage.removeItem('learningProgress');
+		refreshProgressDashboard();
+		showAlert('🔄 Your progress has been reset!', 'success');
+	}
+}
+
+function exportCertificate() {
+	showAlert('🎓 Your certificates have been prepared for download!\\n\\nCertificates:\\n✅ HTML Basics - Completed\\n📋 CSS Styling - In Progress (70%)\\n⏳ JavaScript - Coming Soon', 'success');
+}
+
+function deleteAccount() {
+	const confirmed = confirm('⚠️ WARNING: This will permanently delete your account and all data!\\n\\nType YES to confirm:');
+	if(confirmed) {
+		const userConfirm = prompt('Type "YES" to confirm account deletion:');
+		if(userConfirm === 'YES') {
+			localStorage.clear();
+			showAlert('❌ Your account has been deleted. Redirecting to home page...', 'error');
+			setTimeout(() => window.location.reload(), 2000);
+		} else {
+			showAlert('Account deletion cancelled.', 'info');
+		}
+	}
+}
+
+// Deploy-friendly error capture (GitHub Pages path + runtime fail safe)
+window.addEventListener('error', function(event){
+	console.error('Uncaught error:', event.message, 'at', event.filename + ':' + event.lineno + ':' + event.colno);
+	var body = document.body;
+	if(body){
+		body.innerHTML = '<div style="padding:40px;font-family:Poppins,sans-serif;color:#fff;background:#0f172a;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><h1>Oops — An error occurred</h1><p>Please refresh the page, or check the console for details.</p><p style="margin-top:12px;color:#a5b4fc">Error: ' + (event.message || 'unknown') + '</p><p style="margin-top:20px;">If you deployed on GitHub Pages, ensure your repo root has index.html and all files are committed, then disable any branch-level redirects to docs if unused.</p></div>';
+	}
+	event.preventDefault();
+});
+</script>
+
+<!-- Video Modal -->
+<div id="video-modal" class="video-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center">
+	<div class="video-modal-content" style="background:#1e293b;border-radius:12px;padding:20px;max-width:800px;width:90%;max-height:80vh;position:relative">
+		<button onclick="closeVideoModal()" style="position:absolute;top:10px;right:10px;background:none;border:none;color:white;font-size:24px;cursor:pointer;padding:5px">&times;</button>
+		<h3 id="video-title" style="color:#60a5fa;margin-bottom:15px;margin-top:0">Video Tutorial</h3>
+		<div id="video-container" style="width:100%;height:400px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative">
+			<p style="color:#94a3b8;text-align:center">Loading video...</p>
+		</div>
+	</div>
+</div>
+
+<!-- Payment Modal -->
+<div id="payment-modal" class="payment-modal">
+	<div class="payment-modal-container">
+		<div class="payment-modal-header">
+			<h3 class="payment-modal-title" id="paymentTitle">Upload Payment Receipt</h3>
+			<button class="payment-modal-close" onclick="closePaymentModal()">×</button>
+		</div>
+		<div style="padding:15px;background:rgba(96,165,250,0.2);border-radius:8px;margin-bottom:20px;border:1px solid rgba(96,165,250,0.3)">
+			<p style="color:#60a5fa;margin:0">Course Price: <strong id="paymentAmount">$29.99</strong></p>
+		</div>
+		<div class="form-group">
+			<label class="form-label">Email Address</label>
+			<input type="email" id="paymentEmail" class="form-input" placeholder="Your email" value="">
+		</div>
+		<div class="form-group">
+			<label class="form-label">Payment Reference/Transaction ID</label>
+			<input type="text" id="paymentReference" class="form-input" placeholder="e.g., TXN123456 or PayPal/Bank reference">
+		</div>
+		<div class="form-group">
+			<label class="form-label">Upload Receipt (JPG, PNG, PDF)</label>
+			<label class="payment-file-label" for="paymentFile">
+				<span id="fileText">📁 Click to select receipt or drag and drop</span>
+				<input type="file" id="paymentFile" accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="document.getElementById('fileText').textContent = 'File selected: ' + this.files[0].name">
+			</label>
+		</div>
+		<div style="background:rgba(255,193,7,0.2);padding:12px;border-radius:8px;margin:15px 0;border-left:3px solid #f97316">
+			<p style="font-size:0.85rem;color:#f97316;margin:0">⚠️ Please upload a clear receipt or payment proof. Admin will verify within 24 hours.</p>
+		</div>
+		<input type="hidden" id="paymentCourse">
+		<div style="display:flex;gap:10px;margin-top:20px">
+			<button class="form-btn" onclick="submitPayment()" style="flex:1">Submit Payment</button>
+			<button class="form-btn" style="flex:1;background:#64748b" onclick="closePaymentModal()">Cancel</button>
+		</div>
+	</div>
+</div>
+
+<footer style="text-align:center;padding:20px;color:#94a3b8;font-size:0.9rem;margin-top:40px;border-top:1px solid rgba(148,163,184,0.2)">
+	© <script>document.write(new Date().getFullYear())</script> J_Dev. All rights reserved.
+</footer>
+
+</body>
+</html>
